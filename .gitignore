@@ -1,0 +1,7 @@
+*.idea
+*.depcache
+*.iml
+out/
+doc/
+dist/
+bin/
