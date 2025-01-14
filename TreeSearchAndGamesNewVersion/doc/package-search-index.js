@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"ia.algo.jeux"},{"l":"ia.algo.recherche"},{"l":"ia.framework.common"},{"l":"ia.framework.jeux"},{"l":"ia.framework.recherche"},{"l":"ia.problemes"}];updateSearchResults();
