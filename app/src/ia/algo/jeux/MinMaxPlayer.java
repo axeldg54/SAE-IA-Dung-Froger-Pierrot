@@ -2,6 +2,7 @@ package ia.algo.jeux;
 
 import ia.framework.common.Action;
 import ia.framework.common.ActionValuePair;
+import ia.framework.common.State;
 import ia.framework.jeux.Game;
 import ia.framework.jeux.GameState;
 import ia.framework.jeux.Player;
@@ -9,63 +10,88 @@ import ia.framework.jeux.Player;
 public class MinMaxPlayer extends Player {
 
     /**
-     * Represente un joueur
+     * Représente un joueur utilisant l'algorithme Minimax.
      *
      * @param g          l'instance du jeu
-     * @param player_one si joueur 1
+     * @param player_one indique si c'est le joueur 1
      */
     public MinMaxPlayer(Game g, boolean player_one) {
         super(g, player_one);
+        name = "MinMax";
     }
 
     @Override
     public Action getMove(GameState state) {
-        ActionValuePair actionValeur;
+        ActionValuePair bestMove;
 
-        if (state.getPlayerToMove() == PLAYER1) {
-            actionValeur = maxValeur(state);
+        if (player == PLAYER1) {
+            bestMove = maxVal(state);
         } else {
-            actionValeur = minValeur(state);
+            bestMove = minVal(state);
         }
-        return actionValeur.getAction();
+
+        return bestMove.getAction();
     }
 
-    public ActionValuePair maxValeur(GameState state) { // le meilleur coup du point de vue de max
+    /**
+     * Fonction Minimax pour maximiser le score.
+     *
+     * @param state l'état actuel du jeu
+     * @return le couple action-valeur optimal pour le joueur MAX
+     */
+    public ActionValuePair maxVal(GameState state) {
+        // Vérifie si l'état est final
         if (state.isFinalState()) {
             return new ActionValuePair(null, state.getGameValue());
         }
 
-        double V_max = Integer.MIN_VALUE;
-        Action C_max = null;
+        double maxValue = Double.NEGATIVE_INFINITY;
+        Action bestAction = null;
 
-        for (Action c : game.getActions(state)) {
-            GameState S_suivant = (GameState) game.doAction(state, c); /*jouer c dans S*/                 // On joue le coup et récupère un nouvel état
-            ActionValuePair actionValue = minValeur(S_suivant);              // On alterne à min
+        // Parcourt toutes les actions possibles
+        for (Action action : game.getActions(state)) {
+            State nextState = game.doAction(state, action);
 
-            if (actionValue.getValue() > V_max) {                               // Mise à jour de la meilleure valeur et du coup
-                V_max = actionValue.getValue();
-                C_max = actionValue.getAction();
+            // Évalue la valeur minimale de l'adversaire
+            ActionValuePair nextActionValuePair = minVal((GameState) nextState);
+
+            if (nextActionValuePair.getValue() >= maxValue) {
+                maxValue = nextActionValuePair.getValue();
+                bestAction = action;
             }
         }
-        return new ActionValuePair(C_max, V_max);
+
+        return new ActionValuePair(bestAction, maxValue);
     }
 
-    public ActionValuePair minValeur(GameState state) {
+    /**
+     * Fonction Minimax pour minimiser le score.
+     *
+     * @param state l'état actuel du jeu
+     * @return le couple action-valeur optimal pour le joueur MIN
+     */
+    public ActionValuePair minVal(GameState state) {
+        // Vérifie si l'état est final
         if (state.isFinalState()) {
             return new ActionValuePair(null, state.getGameValue());
         }
-        double V_min = Integer.MAX_VALUE;                              // Différence par rapport à MaxValeur
-        Action C_min = null;
 
-        for (Action c : game.getActions(state)) {
-            GameState S_suivant = (GameState) game.doAction(state, c);
-            ActionValuePair actionValue = maxValeur(S_suivant);
+        double minValue = Double.POSITIVE_INFINITY;
+        Action bestAction = null;
 
-            if (actionValue.getValue() < V_min) {                            // Différence par rapport à MaxValeur
-                V_min = actionValue.getValue();
+        // Parcourt toutes les actions possibles
+        for (Action action : game.getActions(state)) {
+            State nextState = game.doAction(state, action);
+
+            // Évalue la valeur maximale de l'adversaire
+            ActionValuePair nextActionValuePair = maxVal((GameState) nextState);
+
+            if (nextActionValuePair.getValue() <= minValue) {
+                minValue = nextActionValuePair.getValue();
+                bestAction = action;
             }
-            C_min = actionValue.getAction();
         }
-        return new ActionValuePair(C_min, V_min);
+
+        return new ActionValuePair(bestAction, minValue);
     }
 }
