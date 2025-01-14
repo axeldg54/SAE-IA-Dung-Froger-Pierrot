@@ -3,7 +3,10 @@ package ia.framework.common;
 import ia.algo.jeux.HumanPlayer;
 import ia.algo.jeux.MinMaxPlayer;
 import ia.algo.jeux.RandomPlayer;
+import ia.algo.recherche.BFS;
+import ia.algo.recherche.DFS;
 import ia.algo.recherche.RandomTreeSearch;
+import ia.algo.recherche.UCS;
 import ia.framework.jeux.Game;
 import ia.framework.jeux.Player;
 import ia.framework.recherche.SearchProblem;
@@ -277,20 +280,19 @@ public class ArgParse {
      * @param s    L'état initial
      * @return Une instance de l'algorithme
      */
-    public static TreeSearch makeAlgo(String algo,
-                                      SearchProblem p,
-                                      State s) {
-        if (algo == null)
+    public static TreeSearch makeAlgo(String algo, SearchProblem p, State s) {
+        if (algo == null) {
             algo = "rnd";
+        }
         switch (algo) {
             case "rnd":
                 return new RandomTreeSearch(p, s);
-            //case "bfs":
-            //return new BFS(p,s);
-            // case "dfs":
-            //return new DFS(p,s);
-            //case "ucs":
-            //return new UCS(p,s);
+            case "bfs":
+                return new BFS(p, s);
+            case "dfs":
+                return new DFS(p, s);
+            case "ucs":
+                return new UCS(p, s);
             //case "gfs":
             //return new GFS(p,s);
             //case "astar":
