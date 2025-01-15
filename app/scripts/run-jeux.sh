@@ -98,6 +98,3 @@ for ((i = 0 ; i < $RUNS ; i++ )); do
         echo -e "${i}\tERROR"
     fi
 done
-
-
-
