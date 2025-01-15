@@ -1,5 +1,6 @@
 package ia.framework.common;
 
+import ia.algo.jeux.AlphaBetaPlayer;
 import ia.algo.jeux.HumanPlayer;
 import ia.algo.jeux.MinMaxPlayer;
 import ia.algo.jeux.RandomPlayer;
@@ -258,10 +259,8 @@ public class ArgParse {
                 return new HumanPlayer(game, is_p1);
             case "minmax":
                 return new MinMaxPlayer(game, is_p1);
-            //getValueOfParam(args, "-d", -1));
-            //case "alphabeta":
-            //return new AlphaBetaPlayer(game, is_p1,
-            //getValueOfParam(args, "-d", -1));
+            case "alphabeta":
+                return new AlphaBetaPlayer(game, is_p1);
             default:
                 System.out.println("Joueur inconnu");
                 usage();
