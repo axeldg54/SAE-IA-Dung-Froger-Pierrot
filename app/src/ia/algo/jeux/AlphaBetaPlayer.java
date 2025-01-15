@@ -58,13 +58,13 @@ public class AlphaBetaPlayer extends Player {
 			if (nextActionValuePair.getValue() >= maxValue) {
 				maxValue = nextActionValuePair.getValue();
 				bestAction = action;
-				
-				if (maxValue > alpha) {
-					alpha = maxValue;
-				}
 			}
 			
-			if( maxValue >= beta) {
+			if (maxValue > alpha) {
+				alpha = maxValue;
+			}
+			
+			if (maxValue >= beta) {
 				return new ActionValuePair(bestAction, maxValue);
 			}
 		}
@@ -97,13 +97,13 @@ public class AlphaBetaPlayer extends Player {
 			if (nextActionValuePair.getValue() <= minValue) {
 				minValue = nextActionValuePair.getValue();
 				bestAction = action;
-				
-				if (minValue < beta) {
-					beta = minValue;
-				}
 			}
 			
-			if( minValue <= beta) {
+			if (minValue < beta) {
+				beta = minValue;
+			}
+			
+			if (minValue <= alpha) {
 				return new ActionValuePair(bestAction, minValue);
 			}
 		}
