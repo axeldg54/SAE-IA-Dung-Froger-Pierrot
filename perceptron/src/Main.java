@@ -13,7 +13,14 @@ public class Main {
 
     public static void main(String[] args) {
         // Création d'un réseau de neurones avec 2 entrées, 2 neurones cachés et 1 sortie
-        MLP mlp = new MLP(new int[]{2, 2, 1}, 0.1, new Sigmoide());
+        MLP mlp = new MLP(
+                new int[]{
+                        2,        // 2 neurones d'entrée
+                        2,        // 2 neurones cachés
+                        1},       // 1 neurone de sortie
+                0.1,              // pas d'apprentissage
+                new Sigmoide()    // fonction utilisée
+        );
 
         System.out.println(new AndOperator());
         // Entraînement du réseau de neurones
