@@ -12,14 +12,15 @@ import transferFunction.Tanh;
 public class Main {
 
     public static void main(String[] args) {
+
         // Création d'un réseau de neurones avec 2 entrées, 2 neurones cachés et 1 sortie
         MLP mlp = new MLP(
                 new int[]{
                         2,        // 2 neurones d'entrée
                         2,        // 2 neurones cachés
                         1},       // 1 neurone de sortie
-                0.1,              // pas d'apprentissage
-                new Sigmoide()    // fonction utilisée
+                0.1,              // pas d'apprentissage de 0.1 (c'est-à-dire que les poids sont mis à jour de 0.1 * erreur)
+                new Sigmoide()    // fonction de transfert utilisée
         );
 
         System.out.println(new AndOperator());
@@ -39,6 +40,13 @@ public class Main {
         test(mlp, XorOperator.INPUTS, "XOR");
     }
 
+    /**
+     * Entraîne le réseau de neurones
+     * @param mlp réseau de neurones
+     * @param inputs données d'entrée
+     * @param outputs données de sortie (résultats attendus)
+     * @param nbIterations nombre de fois où les données d'entrée sont utilisées pour l'entraînement
+     */
     private static void train(MLP mlp, double[][] inputs, double[][] outputs, int nbIterations) {
         for (int i = 0; i < nbIterations; i++) {
             for (int j = 0; j < inputs.length; j++) {
@@ -47,6 +55,13 @@ public class Main {
         }
     }
 
+    /**
+     * Teste le réseau de neurones
+     * @param mlp réseau de neurones
+     * @param inputs données d'entrée
+     * @param operation nom de l'opération (AND, OR, XOR)
+     * Affiche le résultat de l'opération pour chaque donnée d'entrée
+     */
     private static void test(MLP mlp, double[][] inputs, String operation) {
         for (double[] input : inputs) {
             System.out.println(input[0] + " " + operation + " " + input[1] + " => " + Math.round(mlp.execute(input)[0]));
