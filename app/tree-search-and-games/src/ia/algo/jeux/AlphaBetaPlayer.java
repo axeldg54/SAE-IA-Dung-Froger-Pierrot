@@ -55,13 +55,13 @@ public class AlphaBetaPlayer extends Player {
 			// Évalue la valeur minimale de l'adversaire
 			ActionValuePair nextActionValuePair = minVal((GameState) nextState, alpha, beta);
 			
-			if (nextActionValuePair.getValue() >= maxValue) {
+			if (nextActionValuePair.getValue() > maxValue) {
 				maxValue = nextActionValuePair.getValue();
-				bestAction = action;
-			}
-			
-			if (maxValue > alpha) {
-				alpha = maxValue;
+				
+				if (maxValue > alpha) {
+					alpha = maxValue;
+					bestAction = action;
+				}
 			}
 			
 			if (maxValue >= beta) {
@@ -94,13 +94,13 @@ public class AlphaBetaPlayer extends Player {
 			// Évalue la valeur maximale de l'adversaire
 			ActionValuePair nextActionValuePair = maxVal((GameState) nextState, alpha, beta);
 			
-			if (nextActionValuePair.getValue() <= minValue) {
+			if (nextActionValuePair.getValue() < minValue) {
 				minValue = nextActionValuePair.getValue();
-				bestAction = action;
-			}
-			
-			if (minValue < beta) {
-				beta = minValue;
+				
+				if (minValue < beta) {
+					beta = minValue;
+					bestAction = action;
+				}
 			}
 			
 			if (minValue <= alpha) {
