@@ -21,7 +21,7 @@ public class AndOrXor {
 	
 	public static void main(String[] args) throws IOException {
 		
-		//enregistrerDonnees();
+		enregistrerDonnees();
 		
 		// Création d'un réseau de neurones avec 2 entrées, 2 neurones cachés et 1 sortie
 		MLP mlp = new MLP(
@@ -108,7 +108,7 @@ public class AndOrXor {
 				
 				BufferedWriter file = new BufferedWriter(new FileWriter("./app/perceptron/data/" + function.toString() + "/" + operator.toString() + ".csv"));
 				
-				file.write("Fonction;Operation;nbIteration;Marge d'erreur (%);Temps d'entrainement(nanosecondes);");
+				file.write("Fonction;Operation;nbIteration;Taux de réussite (%);Temps d'entrainement(nanosecondes);");
 				file.newLine();
 				
 				// on veut tester différents nombres d'itérations d'entrainement (de 10 à 10 000) pour visioner l'amélioration des performances
@@ -126,22 +126,24 @@ public class AndOrXor {
 					var t_fin = System.nanoTime();
 					var temps = t_fin - t_debut; // on calcule le temps d'entrainement pour ensuite le comparer aux performances
 					
-					double marge = 0;
+					double nbBonnesReponses = 0;
 					
 					// test du réseau de neurone et sauvegarde des résultats dans le fichier csv
 					for (int k = 0; k < operator.getInputs().length; k++) {
 						var result = mlp.execute(operator.getInputs()[k])[0];
 						var expected = operator.getOutputs()[k][0];
-						
-						marge += Math.abs(result - expected);
+
+						if (Math.round(result) == expected) {
+							nbBonnesReponses++;
+						}
 					}
 					
-					double margeDerreur = (marge / operator.getInputs().length) * 100;
+					double tauxReussite = (nbBonnesReponses / operator.getInputs().length) * 100;
 					
 					file.write("""
 							%s;%s;%d;%f;%d;
 							""".formatted(function.toString(), operator.toString(), nbIterCourant,
-							margeDerreur, temps));
+							tauxReussite, temps));
 				}
 				file.close();
 			}
