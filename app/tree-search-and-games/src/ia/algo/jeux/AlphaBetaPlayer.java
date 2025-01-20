@@ -52,7 +52,7 @@ public class AlphaBetaPlayer extends Player {
 		for (Action action : game.getActions(state)) {
 			State nextState = game.doAction(state, action);
 			
-			this.incStateCounter();
+			this.incStateCounter(); // compteur d'états visités
 			
 			// Évalue la valeur minimale de l'adversaire
 			ActionValuePair nextActionValuePair = minVal((GameState) nextState, alpha, beta);
@@ -93,7 +93,7 @@ public class AlphaBetaPlayer extends Player {
 		for (Action action : game.getActions(state)) {
 			State nextState = game.doAction(state, action);
 			
-			this.incStateCounter();
+			this.incStateCounter(); // compteur d'états visités
 			
 			// Évalue la valeur maximale de l'adversaire
 			ActionValuePair nextActionValuePair = maxVal((GameState) nextState, alpha, beta);

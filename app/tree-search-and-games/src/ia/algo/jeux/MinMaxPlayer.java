@@ -50,6 +50,9 @@ public class MinMaxPlayer extends Player {
 
         // Parcourt toutes les actions possibles
         for (Action action : game.getActions(state)) {
+            
+            this.incStateCounter(); // compteur d'états visités
+            
             State nextState = game.doAction(state, action);
 
             // Évalue la valeur minimale de l'adversaire
@@ -81,6 +84,9 @@ public class MinMaxPlayer extends Player {
 
         // Parcourt toutes les actions possibles
         for (Action action : game.getActions(state)) {
+            
+            this.incStateCounter(); // compteur d'états visités
+            
             State nextState = game.doAction(state, action);
 
             // Évalue la valeur maximale de l'adversaire
