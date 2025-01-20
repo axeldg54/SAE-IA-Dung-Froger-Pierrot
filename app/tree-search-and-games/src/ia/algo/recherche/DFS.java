@@ -1,18 +1,14 @@
 package ia.algo.recherche;
 
-import ia.framework.common.Action;
-import ia.framework.common.ArgParse;
 import ia.framework.common.State;
 import ia.framework.recherche.SearchNode;
 import ia.framework.recherche.SearchProblem;
 import ia.framework.recherche.TreeSearch;
 
-import java.util.ArrayList;
-
-// Indication : Une simple liste chaînée est une structure FIFO (First In First Out) on ajoute les éléments en début fin de liste   .
+import java.util.HashSet;
+import java.util.LinkedList;
 
 public class DFS extends TreeSearch {
-    
     
     /**
      * Crée un algorithme de recherche
@@ -24,56 +20,37 @@ public class DFS extends TreeSearch {
         super(p, s);
     }
     
-    /**
-     * Lance la recherche pour résoudre le problème
-     * <p>A concrétiser pour chaque algorithme.</p>
-     * <p>La solution devra être stockée dans end_node.</p>
-     *
-     * @return Vrai si solution trouvé
-     */
     @Override
     public boolean solve() {
+        var etatsConnus = new HashSet<State>();
+        var noeudsEtendre = new LinkedList<SearchNode>();
         
-        ArrayList<State> listeDesEtatsAVisiter = new ArrayList<>();
-        ArrayList<State> listeDesEtatsVisites = new ArrayList<>();
+        noeudsEtendre.add(SearchNode.makeRootSearchNode(this.initial_state));
+        etatsConnus.add(this.initial_state);
         
-        // On commence à létat initial
-        SearchNode node = SearchNode.makeRootSearchNode(initial_state);
-        State state = node.getState();
-        listeDesEtatsAVisiter.addFirst(state);
-        
-        if (ArgParse.DEBUG)
-            System.out.print("["+listeDesEtatsAVisiter.getFirst());
-        
-        while( !listeDesEtatsAVisiter.isEmpty() && !problem.isGoalState(listeDesEtatsAVisiter.getFirst())) {
+        while (!noeudsEtendre.isEmpty()) {
+            var noeud = noeudsEtendre.removeFirst();
+            var etat = noeud.getState();
             
-            State etatInitial = listeDesEtatsAVisiter.getFirst();
-            
-            // Les actions possibles depuis cet état
-            ArrayList<Action> actions = problem.getActions(etatInitial);
-            
-            for(var actionCourante : actions) {
-                var newNode = SearchNode.makeChildSearchNode(problem, node, actionCourante);
-                var newState = newNode.getState();
-                
-                if(!listeDesEtatsVisites.contains(newState)){
-                    listeDesEtatsAVisiter.addFirst(newState);
-                    listeDesEtatsVisites.add(etatInitial);
-                }
-                
-                if (ArgParse.DEBUG)
-                    System.out.print(" + " + actionCourante + "] -> ["+newState);
+            if (problem.isGoalState(etat)) {
+                this.end_node = noeud;
+                return true;
             }
             
-            listeDesEtatsAVisiter.remove(etatInitial);
+            var actions = problem.getActions(etat);
+            
+            for (var action : actions) {
+                var nouveauNoeud = SearchNode.makeChildSearchNode(problem, noeud, action);
+                var nouvelEtat = nouveauNoeud.getState();
+                
+                if (!etatsConnus.contains(nouvelEtat)/* && !noeudsEtendre.contains(nouveauNoeud)*/) {
+                    noeudsEtendre.addFirst(nouveauNoeud); // First difference
+                    etatsConnus.add(nouvelEtat);
+                }
+            }
         }
         
-        // Enregistrer le noeud final
-        end_node = node;
-        
-        if (ArgParse.DEBUG)
-            System.out.println("]");
-        
+        end_node = SearchNode.makeRootSearchNode(this.initial_state);
         return false;
     }
 }
