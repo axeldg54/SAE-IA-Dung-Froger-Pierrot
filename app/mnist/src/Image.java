@@ -22,7 +22,9 @@ public class Image {
         DataInputStream input = new DataInputStream(new FileInputStream(file));
         int type = input.readInt();
         int nbImages = input.readInt();
-        nbImages = 1000;
+        if (this.nbImages < nbImages) {
+            nbImages = this.nbImages;
+        }
         int nbLignes = input.readInt();
         int nbColonne = input.readInt();
         int[][] tab;
