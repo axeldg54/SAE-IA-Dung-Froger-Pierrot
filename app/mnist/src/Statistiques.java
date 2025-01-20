@@ -9,15 +9,15 @@ public class Statistiques {
         this.donneesTest = donneesTest;
     }
 
-    public String tauxReussite(int nbTests) {
+    public String tauxReussiteKnn(int nbImages) {
         int reussite = 0;
         int echec = 0;
-        if (donneesTest.imagettes.size() < nbTests) {
-            System.out.println("Nombre de tests supérieur au nombre d'images, réduction à " + donneesTest.imagettes.size() + " tests");
-            nbTests = donneesTest.imagettes.size();
+        if (donneesTest.imagettes.size() < nbImages) {
+            System.out.println("Attention, le nombre d'images demandé est supérieur au nombre d'images disponibles");
+            nbImages = donneesTest.imagettes.size();
         }
-        try (ProgressBar pb = new ProgressBar("Calcul Taux", nbTests)) {
-            for (int i = 0; i < nbTests; i++) {
+        try (ProgressBar pb = new ProgressBar("Test of KNN", nbImages)) {
+            for (int i = 0; i < nbImages; i++) {
                 if (algo.compare(donneesTest.imagettes.get(i)) == donneesTest.imagettes.get(i).etiquette) {
                     reussite += 1;
                     pb.step();
@@ -28,11 +28,11 @@ public class Statistiques {
             }
         }
         if (echec == 0) {
-            return "100% de réussite";
+            return "[KNN] => 100% de réussite";
         } else {
             double taux = (double) reussite / (reussite + echec) * 100;
             taux = Math.round(taux * 100.0) / 100.0;
-            return taux + "% de réussite";
+            return " [KNN] => " + taux + "% de réussite";
         }
     }
 }

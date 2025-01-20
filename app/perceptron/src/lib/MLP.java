@@ -1,11 +1,8 @@
 package lib;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
-class Neuron {
+class Neuron implements Serializable {
 	public double Value;
 	public double[] Weights;
 	public double Bias;
@@ -22,7 +19,7 @@ class Neuron {
 	}
 }
 
-class Layer {
+class Layer implements Serializable {
 	public Neuron Neurons[];
 	public int Length;
 	
@@ -42,7 +39,7 @@ class Layer {
 }
 
 
-public class MLP {
+public class MLP implements Serializable {
 	protected double fLearningRate = 0.6;
 	protected Layer[] fLayers;
 	protected TransferFunction fTransferFunction;
@@ -106,48 +103,48 @@ public class MLP {
 		}
 		return output;
 	}
-	
-	
+
+
 	/**
 	 * Rétropropagation
-	 *
-	 * @param input  L'entrée courante
-	 * @param output Sortie souhaitée (apprentissage supervisé !)
+	 * @param input    L'entrée courante
+	 * @param output   Sortie souhaitée (apprentissage supervisé !)
 	 * @return Error différence entre la sortie calculée et la sortie souhaitée
 	 */
-	
+
 	public double backPropagate(double[] input, double[] output) {
 		double new_output[] = execute(input);
 		double error;
 		int i, j, k;
-		
+
+
 		// Erreur de sortie
-		for (i = 0; i < fLayers[fLayers.length - 1].Length; i++) {
+		for(i = 0; i < fLayers[fLayers.length - 1].Length; i++) {
 			error = output[i] - new_output[i];
-			fLayers[fLayers.length - 1].Neurons[i].Delta = error * fTransferFunction.evaluateDer(new_output[i]);
+			fLayers[fLayers.length-1].Neurons[i].Delta = error * fTransferFunction.evaluateDer(new_output[i]);
 		}
-		
-		for (k = fLayers.length - 2; k >= 0; k--) {
+
+		for(k = fLayers.length - 2; k >= 0; k--) {
 			// Calcul de l'erreur courante pour les couches cachées
 			// et mise à jour des Delta de chaque neurone
-			for (i = 0; i < fLayers[k].Length; i++) {
+			for(i = 0; i < fLayers[k].Length; i++) {
 				error = 0.0;
-				for (j = 0; j < fLayers[k + 1].Length; j++)
-					error += fLayers[k + 1].Neurons[j].Delta * fLayers[k + 1].Neurons[j].Weights[i];
+				for(j = 0; j < fLayers[k+1].Length; j++)
+					error += fLayers[k+1].Neurons[j].Delta * fLayers[k+1].Neurons[j].Weights[i];
 				fLayers[k].Neurons[i].Delta = error * fTransferFunction.evaluateDer(fLayers[k].Neurons[i].Value);
 			}
 			// Mise à jour des poids de la couche suivante
-			for (i = 0; i < fLayers[k + 1].Length; i++) {
-				for (j = 0; j < fLayers[k].Length; j++)
-					fLayers[k + 1].Neurons[i].Weights[j] += fLearningRate * fLayers[k + 1].Neurons[i].Delta *
+			for(i = 0; i < fLayers[k+1].Length; i++) {
+				for(j = 0; j < fLayers[k].Length; j++)
+					fLayers[k+1].Neurons[i].Weights[j] += fLearningRate * fLayers[k+1].Neurons[i].Delta *
 							fLayers[k].Neurons[j].Value;
-				fLayers[k + 1].Neurons[i].Bias -= fLearningRate * fLayers[k + 1].Neurons[i].Delta;
+				fLayers[k+1].Neurons[i].Bias -= fLearningRate * fLayers[k+1].Neurons[i].Delta;
 			}
 		}
-		
+
 		// Calcul de l'erreur
 		error = 0.0;
-		for (i = 0; i < output.length; i++) {
+		for(i = 0; i < output.length; i++) {
 			error += Math.abs(new_output[i] - output[i]);
 		}
 		error = error / output.length;
@@ -192,5 +189,17 @@ public class MLP {
 	 */
 	public int getOutputLayerSize() {
 		return fLayers[fLayers.length - 1].Length;
+	}
+
+	public void save(String file) throws IOException {
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+			oos.writeObject(this);
+		}
+	}
+
+	public static MLP load(String file) throws IOException, ClassNotFoundException {
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+			return (MLP) ois.readObject();
+		}
 	}
 }

@@ -17,7 +17,7 @@ import java.util.List;
  * Ce programme est un exemple d'utilisation d'un réseau de neurones
  * pour résoudre les problèmes logiques AND, OR et XOR.
  */
-public class Main {
+public class AndOrXor {
 	
 	public static void main(String[] args) throws IOException {
 		
