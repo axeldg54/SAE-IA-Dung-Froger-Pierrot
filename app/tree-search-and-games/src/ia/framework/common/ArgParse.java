@@ -34,7 +34,7 @@ public class ArgParse {
     public static String msg = null;
 
     /**
-     * spécifie le message d'aide
+     * Spécifie le message d'aide
      */
     public static void setUsage(String m) {
         msg = m;
@@ -75,9 +75,7 @@ public class ArgParse {
      */
     public static boolean getFlagFromCmd(String[] args, String arg) {
         int idx = Arrays.asList(args).indexOf(arg);
-        if (idx >= 0)
-            return true;
-        return false;
+        return idx >= 0;
     }
 
     /**
@@ -92,10 +90,10 @@ public class ArgParse {
     }
 
     /**
-     * Retourne le nom du jeux choisi
+     * Retourne le nom du jeu choisi
      *
      * @param args Le tableau de la ligne de commande
-     * @return le nom du jeux ou null
+     * @return le nom du jeu ou null
      */
     public static String getGameFromCmd(String[] args) {
         handleFlags(args);
@@ -118,7 +116,7 @@ public class ArgParse {
      * Retourne le type joueur 1
      *
      * @param args Le tableau de la ligne de commande
-     * @return le jeureur 1  ou null
+     * @return le joueur 1 ou null
      */
     public static String getPlayer1FromCmd(String[] args) {
         handleFlags(args);
@@ -129,7 +127,7 @@ public class ArgParse {
      * Retourne le type joueur 2
      *
      * @param args Le tableau de la ligne de commande
-     * @return le jeureur 2  ou null
+     * @return le joueur 2 ou null
      */
     public static String getPlayer2FromCmd(String[] args) {
         handleFlags(args);
@@ -143,7 +141,7 @@ public class ArgParse {
      * @param args Le tableau de la ligne de commande
      * @param par  le nom de l'argument
      * @param def  la valeur par default
-     * @return la valeur spécifié ou par celle défaut
+     * @return la valeur spécifiée ou par celle défaut
      */
     public static int getValueOfParam(String[] args, String par, int def) {
         handleFlags(args);
@@ -314,22 +312,13 @@ public class ArgParse {
     public static State makeInitialState(String prob) {
         if (prob == null)
             prob = "vac";
-        switch (prob) {
-            case "dum":
-                return Dummy.initialState();
-            case "map":
-                return RomaniaMap.ARAD;
-            case "vac":
-            default:
-                return new VacuumState();
-            case "puz":
-                return new EightPuzzleState();
-            //case "rush":
-            //return RushHourState.makePuzzle31();
-            //case "abcd":
-            //return new ABCDState(new char[]{'A','D','B','C'});  
-        }
+        return switch (prob) {
+            case "dum" -> Dummy.initialState();
+            case "map" -> RomaniaMap.ARAD;
+            case "puz" -> new EightPuzzleState();
+            //case "rush" -> RushHourState.makePuzzle31();
+            //case "abcd" -> new ABCDState(new char[]{'A','D','B','C'});
+            default -> new VacuumState();
+        };
     }
 }
-
-
