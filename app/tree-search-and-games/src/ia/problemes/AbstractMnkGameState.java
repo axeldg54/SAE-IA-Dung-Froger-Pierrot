@@ -214,7 +214,7 @@ public abstract class AbstractMnkGameState extends GameState {
 
     // L'API privée 
 
-    // retourne la valeur au coordonnées données
+    // retourne la valeur aux coordonnées données
     protected char getValueAt(int row, int col) {
 		return board[getPositionAt(row, col)];
 	}
@@ -311,7 +311,7 @@ public abstract class AbstractMnkGameState extends GameState {
 		return false;
 	}
     
-    // verifier s'il y a pas une ligne diagonale de faite
+    // verifier s'il n'y a pas une ligne diagonale de faite
 	private boolean isAnyDiagonalComplete(int player) {
         // 45 deg
         for(int c=0; c<=this.cols-this.streak; c++)

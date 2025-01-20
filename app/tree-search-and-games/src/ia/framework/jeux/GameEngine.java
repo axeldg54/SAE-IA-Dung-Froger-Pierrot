@@ -63,7 +63,7 @@ public class GameEngine {
         // la boucle du jeu
         while(true){
 
-            // afficher le jeux 
+            // afficher le jeu
             System.out.println(state);
             if(ArgParse.DEBUG) 
                 System.out.println("\tValeur pour joueur 1 : "+state.getGameValue());

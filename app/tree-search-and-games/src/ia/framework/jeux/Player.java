@@ -56,7 +56,7 @@ public abstract class Player {
     }
     
     /**
-     * Incrémente le nombre d'état visité
+     * Incrémente le nombre d'états visité
      *
      */
     protected void incStateCounter(){

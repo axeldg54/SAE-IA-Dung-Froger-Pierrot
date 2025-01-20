@@ -28,7 +28,7 @@ public class LancerRecherche {
              );
 
         
-        // récupérer les option de la ligne de commande
+        // récupérer les options de la ligne de commande
         String prob_name = ArgParse.getProblemFromCmd(args);
         String algo_name = ArgParse.getAlgoFromCmd(args);
 

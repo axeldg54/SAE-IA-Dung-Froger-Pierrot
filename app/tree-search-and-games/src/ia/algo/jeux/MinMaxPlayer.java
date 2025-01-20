@@ -23,13 +23,13 @@ public class MinMaxPlayer extends Player {
     @Override
     public Action getMove(GameState state) {
         ActionValuePair bestMove;
-
+        
         if (player == PLAYER1) {
             bestMove = maxVal(state);
         } else {
             bestMove = minVal(state);
         }
-
+        
         return bestMove.getAction();
     }
 
