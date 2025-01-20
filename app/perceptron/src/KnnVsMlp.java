@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class KnnVsMlp {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         // Paramètres
-        int nbImages = 1000;
         String mlpPath = "./app/perceptron/data/mlp.ser";
+        int nbImages = 100; // Maximum 60000
+        int nbIterations = 1000;
         boolean save = true;
+        boolean load = false;
+        boolean train = true;
 
         // Chargement des images et des étiquettes
         Image imagesEntrainement = new Image(nbImages);
@@ -33,9 +36,15 @@ public class KnnVsMlp {
         System.out.println(statistiques.tauxReussiteKnn(nbImages));
 
         // chargement ou création d'un réseau de neurones, entraînement et test
-        //MLP mlp = MLP.load(mlpPath);
-        MLP mlp = new MLP(new int[]{784, 100, 10}, 0.1, new Sigmoide());
-        trainWithImages(donneesEntrainement, mlp, nbImages, 100);
+        MLP mlp;
+        if (load) {
+            mlp = MLP.load(mlpPath);
+        } else{
+            mlp = new MLP(new int[]{784, 100, 10}, 0.1, new Sigmoide());
+        }
+        if (train) {
+            trainWithImages(donneesEntrainement, mlp, nbImages, nbIterations);
+        }
         testWithImages(donneesTest, mlp, nbImages);
 
         // Serialization du réseau de neurones
@@ -114,6 +123,4 @@ public class KnnVsMlp {
             }
         }
     }
-    
-    private static void 
 }
