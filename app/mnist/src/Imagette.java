@@ -1,5 +1,3 @@
-import java.io.*;
-
 public class Imagette {
     public int[][] tab;
     public int type;

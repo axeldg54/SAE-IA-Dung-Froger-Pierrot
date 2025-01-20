@@ -2,12 +2,14 @@ import java.io.IOException;
 
 public class MainMnist {
     public static void main(String[] args) throws IOException {
+        int nbImages = 1000;
+
         // Chargement des images et des etiquettes à partir des fichiers
-        Image imagesEntrainement = new Image();
+        Image imagesEntrainement = new Image(nbImages);
         imagesEntrainement.load("./app/mnist/data/train-images.idx3-ubyte");
         Label labelsEntrainement = new Label();
         labelsEntrainement.load("./app/mnist/data/train-labels.idx1-ubyte");
-        Image imagesTest = new Image();
+        Image imagesTest = new Image(nbImages);
         imagesTest.load("./app/mnist/data/t10k-images.idx3-ubyte");
         Label labelsTest = new Label();
         labelsTest.load("./app/mnist/data/t10k-labels.idx1-ubyte");
@@ -25,6 +27,6 @@ public class MainMnist {
         //System.out.println("Doit renvoyer 5 => " + algo.compare(imagesTest.imagettes.get(0)));
 
         Statistiques statistiques = new Statistiques(algo, donneesTest);
-        System.out.println(statistiques.tauxReussite(1000));
+        System.out.println(statistiques.tauxReussiteKnn(100));
     }
 }
