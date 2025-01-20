@@ -9,6 +9,8 @@ import ia.framework.jeux.Player;
 
 public class MinMaxPlayer extends Player {
 
+    private int depth;
+
     /**
      * Représente un joueur utilisant l'algorithme Minimax.
      *
@@ -18,18 +20,23 @@ public class MinMaxPlayer extends Player {
     public MinMaxPlayer(Game g, boolean player_one) {
         super(g, player_one);
         name = "MinMax";
+        this.depth = 0;
     }
 
     @Override
     public Action getMove(GameState state) {
         ActionValuePair bestMove;
-        
+
+        this.depth = 0;
+
         if (player == PLAYER1) {
             bestMove = maxVal(state);
         } else {
             bestMove = minVal(state);
         }
-        
+
+        System.out.println("Profondeur parcourue : " + depth);
+
         return bestMove.getAction();
     }
 
@@ -40,8 +47,11 @@ public class MinMaxPlayer extends Player {
      * @return le couple action-valeur optimal pour le joueur MAX
      */
     public ActionValuePair maxVal(GameState state) {
+        depth++;
+
         // Vérifie si l'état est final
         if (state.isFinalState()) {
+            depth--;
             return new ActionValuePair(null, state.getGameValue());
         }
 
@@ -74,8 +84,11 @@ public class MinMaxPlayer extends Player {
      * @return le couple action-valeur optimal pour le joueur MIN
      */
     public ActionValuePair minVal(GameState state) {
+        depth++;
+
         // Vérifie si l'état est final
         if (state.isFinalState()) {
+            depth--;
             return new ActionValuePair(null, state.getGameValue());
         }
 

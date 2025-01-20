@@ -17,14 +17,14 @@ public class MainAlgosGames {
 
         // On change uniquement N, puis uniquement K
         for (String nomAlgo : nomsAlgos) {
-            enregistrerFichier(nomAlgo, 100, "N", MIN_N, 250);
-            enregistrerFichier(nomAlgo, 100, "K", MIN_K, 50);
+            enregistrerFichier(nomAlgo, 100, "N", MIN_N, 300);
+            enregistrerFichier(nomAlgo, 100, "K", MIN_K, 100);
         }
     }
 
     public static void enregistrerFichier(String algorithme, int seed, String parametre, int valInit, int valMax) throws IOException {
         BufferedWriter file = new BufferedWriter(
-                new FileWriter("./app/tree-search-and-games/data/" + algorithme + "/" + parametre + ".csv")
+                new FileWriter("./app/tree-search-and-games/data/" + algorithme + "/" + algorithme + "-" + parametre + ".csv")
         );
         file.write("Algo;Problème;Seed;N;K;Temps;");
         file.newLine();
