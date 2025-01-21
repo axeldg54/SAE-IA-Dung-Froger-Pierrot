@@ -43,8 +43,8 @@ public class TicTacToeState extends MnkGameState {
 
         double value = pos_x - pos_o;
 
-         System.out.println("Possibilities: X = "+pos_x+", O = "+pos_o+
-        ". Value = "+value);
+//         System.out.println("Possibilities: X = "+pos_x+", O = "+pos_o+
+//        ". Value = "+value);
         return value;
     }
 
@@ -87,7 +87,7 @@ public class TicTacToeState extends MnkGameState {
                     res++; // une ligne possible de plus
             }
 
-        System.out.println("Possible vertical for "+ (char) player+ " : "+res);
+//        System.out.println("Possible vertical for "+ (char) player+ " : "+res);
         return res;
     }
 
@@ -112,7 +112,7 @@ public class TicTacToeState extends MnkGameState {
                 if (counter > 0)
                     res++; // une ligne possible de plus
             }
-        System.out.println("Possible horizontal for "+ (char) player+ " : "+res);
+//        System.out.println("Possible horizontal for "+ (char) player+ " : "+res);
         return res;
     }
 
@@ -156,7 +156,7 @@ public class TicTacToeState extends MnkGameState {
                 if (counter > 0)
                     res++; // une ligne possible de plus
             }
-        System.out.println("Possible diagonal for "+ (char) player+ " : "+res);
+//        System.out.println("Possible diagonal for "+ (char) player+ " : "+res);
         return res;
     }
 
