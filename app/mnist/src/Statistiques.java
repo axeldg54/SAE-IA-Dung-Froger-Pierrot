@@ -9,7 +9,7 @@ public class Statistiques {
         this.donneesTest = donneesTest;
     }
 
-    public String tauxReussiteKnn(int nbImages) {
+    public double tauxReussiteKnn(int nbImages) {
         int reussite = 0;
         int echec = 0;
         if (donneesTest.imagettes.size() < nbImages) {
@@ -27,12 +27,10 @@ public class Statistiques {
                 }
             }
         }
-        if (echec == 0) {
-            return "[KNN] => 100% de réussite";
-        } else {
-            double taux = (double) reussite / (reussite + echec) * 100;
-            taux = Math.round(taux * 100.0) / 100.0;
-            return " [KNN] => " + taux + "% de réussite";
-        }
+
+        double taux = (double) reussite / (reussite + echec) * 100;
+        taux = Math.round(taux * 100.0) / 100.0;
+        return taux;
+        
     }
 }
