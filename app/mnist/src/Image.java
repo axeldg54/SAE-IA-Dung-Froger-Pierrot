@@ -71,7 +71,7 @@ public class Image {
 
     public static void main(String[] args) throws IOException {
         Image model = new Image(1000);
-        model.load("./app/mnist/data/train-images.idx3-ubyte");
+        model.load("./data/number/train-images.idx3-ubyte");
         model.saveImage(model.imagettes.get(0), 0);
         model.saveImage(model.imagettes.get(model.imagettes.size()-1), model.imagettes.size());
         System.out.println(model.imagettes.get(0).etiquette + " -> " + model.imagettes.get(model.imagettes.size()-1).etiquette);

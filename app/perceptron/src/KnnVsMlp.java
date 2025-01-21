@@ -11,23 +11,21 @@ public class KnnVsMlp {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         // Paramètres
         String mlpPath = "./app/perceptron/data/mlp.ser";
-        int nbTrainImages = 1000; // Maximum 60000
-        int nbTestImages = 999; // Maximum 999
-        int nbIterations = 10;
-        boolean load = false;
-        boolean train = true;
-        boolean save = true;
-        boolean generateData = false;
+        int nbTrainImages = 1000; // Nombre d'images pour l'entraînement (maximum 60000)
+        int nbTestImages = 10000; // Nombre d'images à tester (maximum 10000)
+        int nbIterations = 10; // Nombre d'itérations pour l'entraînement
+        boolean number = false; // true pour les chiffres, false pour les vêtements
+        boolean load = false; // true pour charger un réseau de neurones, false pour en créer un nouveau
+        boolean train = true; // true pour entraîner le réseau de neurones, false pour ne pas l'entraîner
+        boolean save = false; // true pour sauvegarder le réseau de neurones, false pour ne pas le sauvegarder
+        boolean generateData = false; // true pour générer les données, false pour ne pas les générer
 
         // Chargement des images et des étiquettes
         Image imagesEntrainement = new Image(nbTrainImages);
-        imagesEntrainement.load("./app/mnist/data/train-images.idx3-ubyte");
         Label labelsEntrainement = new Label();
-        labelsEntrainement.load("./app/mnist/data/train-labels.idx1-ubyte");
         Image imagesTest = new Image(nbTestImages);
-        imagesTest.load("./app/mnist/data/t10k-images.idx3-ubyte");
         Label labelsTest = new Label();
-        labelsTest.load("./app/mnist/data/t10k-labels.idx1-ubyte");
+        loadImagesLabels(number, imagesEntrainement, labelsEntrainement, imagesTest, labelsTest);
 
         // Création de l'objet Donnees pour stocker les images et les étiquettes
         Donnees donneesTest = new Donnees(imagesTest.imagettes);
@@ -61,6 +59,20 @@ public class KnnVsMlp {
 
         if (generateData) {
             generateData(donneesEntrainement, nbTestImages, nbIterations, donneesTest);
+        }
+    }
+
+    private static void loadImagesLabels(boolean number, Image imagesEntrainement, Label labelsEntrainement, Image imagesTest, Label labelsTest) throws IOException {
+        if (number) {
+            imagesEntrainement.load("./data/number/train-images.idx3-ubyte");
+            labelsEntrainement.load("./data/number/train-labels.idx1-ubyte");
+            imagesTest.load("./data/number//t10k-images.idx3-ubyte");
+            labelsTest.load("./data/number/t10k-labels.idx1-ubyte");
+        } else {
+            imagesEntrainement.load("./data/fashion/train-images-idx3-ubyte");
+            labelsEntrainement.load("./data/fashion/train-labels-idx1-ubyte");
+            imagesTest.load("./data/fashion/t10k-images-idx3-ubyte");
+            labelsTest.load("./data/fashion/t10k-labels-idx1-ubyte");
         }
     }
 
