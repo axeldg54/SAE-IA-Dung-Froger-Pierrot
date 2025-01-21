@@ -8,8 +8,8 @@ public class KnnVsMlp {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         // Paramètres
         String mlpPath = "./app/perceptron/data/mlp.ser";
-        int nbImages = 100; // Maximum 60000
-        int nbIterations = 1000;
+        int nbImages = 10000; // Maximum 60000
+        int nbIterations = 10;
         boolean save = true;
         boolean load = false;
         boolean train = true;
@@ -31,9 +31,9 @@ public class KnnVsMlp {
         donneesEntrainement.attribuerEtiquettes(labelsEntrainement.etiquettes);
 
         // Test de l'algorithme KNN
-        PlusProche algo = new PlusProche(donneesEntrainement);
-        Statistiques statistiques = new Statistiques(algo, donneesTest);
-        System.out.println(statistiques.tauxReussiteKnn(nbImages));
+        PlusProche algoKNN = new PlusProche(donneesEntrainement);
+        Statistiques statistiquesKNN = new Statistiques(algoKNN, donneesTest);
+        System.out.println(statistiquesKNN.tauxReussiteKnn(10000));
 
         // chargement ou création d'un réseau de neurones, entraînement et test
         MLP mlp;
@@ -45,7 +45,7 @@ public class KnnVsMlp {
         if (train) {
             trainWithImages(donneesEntrainement, mlp, nbImages, nbIterations);
         }
-        testWithImages(donneesTest, mlp, nbImages);
+        testWithImages(donneesTest, mlp, 10000);
 
         // Serialization du réseau de neurones
         if (save) {
@@ -89,7 +89,7 @@ public class KnnVsMlp {
                 double[] inputs = Image.imagetteToInput(donneesTest.imagettes.get(i));
                 double[] result = mlp.execute(inputs);
                 int resultInt = getMax(result);
-                System.out.println("Attendu : " + donneesTest.imagettes.get(i).etiquette + " - Trouvé : [" + resultInt + "] " + Arrays.toString(Arrays.stream(result).map(Math::round).toArray()));
+                //System.out.println("Attendu : " + donneesTest.imagettes.get(i).etiquette + " - Trouvé : [" + resultInt + "] " + Arrays.toString(Arrays.stream(result).map(Math::round).toArray()));
                 if (donneesTest.imagettes.get(i).etiquette == resultInt) {
                     nbReussites++;
                 }
@@ -120,6 +120,7 @@ public class KnnVsMlp {
                     mlp.backPropagate(inputs, outputs);
                 }
                 pb.step();
+                
             }
         }
     }
