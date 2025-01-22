@@ -3,10 +3,7 @@ import ia.framework.common.State;
 import ia.framework.recherche.SearchProblem;
 import ia.framework.recherche.TreeSearch;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Lance un algorithme de recherche
@@ -33,7 +30,7 @@ public class LancerRecherche {
                         -h    : afficher ceci (mettre à la fin)
                         """
                 );
-        
+
         // récupérer les options de la ligne de commande
         String prob_name = ArgParse.getProblemFromCmd(args);
         String algo_name = ArgParse.getAlgoFromCmd(args);
@@ -63,23 +60,5 @@ public class LancerRecherche {
             algo.printFailure();
 
         System.out.println("Temps nécessaire " + estimatedTime / 1000. + " sec.");
-
-        System.out.println("==========");
-
-        System.out.println("algo: " + algo_name);
-
-        for (int i = 0; i < args.length; i++) {
-            switch (args[i]) {
-                case "-n" -> System.out.println("n: " + args[i + 1]);
-                case "-k" -> System.out.println("k: " + args[i + 1]);
-                case "-r" -> System.out.println("r: " + args[i + 1]);
-            }
-        }
-        System.out.println("temps : " + estimatedTime / 1000. + " sec.");
-
-//        BufferedWriter file = new BufferedWriter(new FileWriter("./app/perceptron/data/" + function.toString() + "/" + operator.toString() + ".csv"));
-
-//        file.write("Fonction;Operation;nbIteration;Marge d'erreur (%);Temps d'entrainement(nanosecondes);");
-//        file.newLine();
     }
 }

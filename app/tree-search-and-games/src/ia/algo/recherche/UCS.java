@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 public class UCS extends TreeSearch {
+
     /**
      * Crée un algorithme de recherche
      *
@@ -27,8 +28,30 @@ public class UCS extends TreeSearch {
         noeudsEtendre.add(SearchNode.makeRootSearchNode(this.initial_state));
         etatsConnus.add(this.initial_state);
 
+        var minG = Double.MAX_VALUE;
+
+          /*
+    2) au moment d'ajouter un nouveau nœud à la frontière, on vérifie s'il n'y a pas déjà un nœud avec ce même état.
+       Si c'est le cas et si ce dernier a une plus grande valeur de g que le nouveau, on le remplace par le nouveau (on vient de trouver un chemin moins coûteux vers ce même état).
+       Ces décisions peuvent être implantées par la structure de donnée File de Priorité, mais peuvent très bien être implantés par une liste triée par ordre de g (qu'il faudra retrier à chaque insertion).
+     */
+
         while (!noeudsEtendre.isEmpty()) {
-            var noeud = noeudsEtendre.removeFirst(); // 1
+            SearchNode noeud = null; // Ne sera de toute façon jamais null
+
+            // Etape 1
+            for (SearchNode n : noeudsEtendre) {
+                double g = n.getCost();
+
+                System.out.println(g);
+                System.out.println(minG);
+
+                if (g < minG) {
+                    noeud = n;
+                    minG = g;
+                }
+            }
+
             var etat = noeud.getState();
 
             if (problem.isGoalState(etat)) {
@@ -42,18 +65,15 @@ public class UCS extends TreeSearch {
                 var nouveauNoeud = SearchNode.makeChildSearchNode(problem, noeud, action);
                 var nouvelEtat = nouveauNoeud.getState();
 
-    /*
-    On définit la fonction g qui donne, pour un nœud donné n, le coût du chemin de n0 jusqu'à n.
-    La stratégie peut se résumer ainsi :
-    1) quand il faut choisir un nœud de la frontière, il faut toujours prendre le nœud avec la valeur de g la plus petite
-    2) au moment d'ajouter un nouveau nœud à la frontière, on vérifie s'il n'y a pas déjà un nœud avec ce même état.
-       Si c'est le cas et si ce dernier a une plus grande valeur de g que le nouveau, on le remplace par le nouveau (on vient de trouver un chemin moins coûteux vers ce même état).
-       Ces décisions peuvent être implantées par la structure de donnée File de Priorité, mais peuvent très bien être implantés par une liste triée par ordre de g (qu'il faudra retrier à chaque insertion).
-     */
-
+                // Ajouter un noeud à la frontiere
                 if (!etatsConnus.contains(nouvelEtat)/* && !noeudsEtendre.contains(nouveauNoeud)*/) {
                     noeudsEtendre.add(nouveauNoeud);
                     etatsConnus.add(nouvelEtat);
+                } else {
+                    // Etape 2, il y a un noeud avec ce même état
+                    if (nouveauNoeud.getCost() < minG) {
+                        noeud = nouveauNoeud;
+                    }
                 }
             }
         }

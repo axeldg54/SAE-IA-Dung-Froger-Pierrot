@@ -240,25 +240,25 @@ public class ArgParse {
      * Factory qui retourne une instance du problème choisie ou celui par défaut
      *
      * @param p_type le type de joueur
-     * @param game   instance du jeux
+     * @param game   instance du jeu
      * @param is_p1  vrai si joueur num 1
      * @param args   les arguments de ligne de commande
      * @return Une instance de player
      */
-    public static Player makePlayer(String p_type, Game game,
-                                    boolean is_p1, String[] args) {
+    public static Player makePlayer(String p_type, Game game, boolean is_p1, String[] args) {
         if (p_type == null) {
             p_type = "random";
         }
+
         switch (p_type) {
             case "random":
                 return new RandomPlayer(game, is_p1);
             case "human":
                 return new HumanPlayer(game, is_p1);
             case "minmax":
-                return new MinMaxPlayer(game, is_p1);
+                return new MinMaxPlayer(game, is_p1, getValueOfParam(args, "-d", Integer.MAX_VALUE));
             case "alphabeta":
-                return new AlphaBetaPlayer(game, is_p1);
+                return new AlphaBetaPlayer(game, is_p1, getValueOfParam(args, "-d", Integer.MAX_VALUE));
             default:
                 System.out.println("Joueur inconnu");
                 usage();

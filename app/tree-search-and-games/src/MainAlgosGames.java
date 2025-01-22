@@ -17,8 +17,8 @@ public class MainAlgosGames {
 
         // On change uniquement N, puis uniquement K
         for (String nomAlgo : nomsAlgos) {
-            enregistrerFichier(nomAlgo, 100, "N", MIN_N, 300);
-            enregistrerFichier(nomAlgo, 100, "K", MIN_K, 100);
+            enregistrerFichier(nomAlgo, 100, "N", MIN_N, 150);
+            enregistrerFichier(nomAlgo, 100, "K", MIN_K, 50);
         }
     }
 
