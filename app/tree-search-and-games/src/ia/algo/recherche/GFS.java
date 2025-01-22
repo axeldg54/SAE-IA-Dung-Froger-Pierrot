@@ -1,6 +1,7 @@
 package ia.algo.recherche;
 
 import ia.framework.common.State;
+import ia.framework.recherche.HasHeuristic;
 import ia.framework.recherche.SearchNode;
 import ia.framework.recherche.SearchProblem;
 import ia.framework.recherche.TreeSearch;
@@ -8,7 +9,7 @@ import ia.framework.recherche.TreeSearch;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-public class UCS extends TreeSearch {
+public class GFS extends TreeSearch implements HasHeuristic {
 
     /**
      * Crée un algorithme de recherche
@@ -16,7 +17,7 @@ public class UCS extends TreeSearch {
      * @param p Le problème à résoudre
      * @param s L'état initial
      */
-    public UCS(SearchProblem p, State s) {
+    public GFS(SearchProblem p, State s) {
         super(p, s);
     }
 
@@ -34,7 +35,7 @@ public class UCS extends TreeSearch {
             var minG = Double.MAX_VALUE;
 
             for (SearchNode n : frontiere) {
-                double g = n.getCost();
+                double g = n.getHeuristic();
 
                 if (g < minG) {
                     minG = g;
@@ -60,9 +61,9 @@ public class UCS extends TreeSearch {
                     frontiere.add(nouveauNoeud);
                 } else {
                     if (frontiere.contains(nouveauNoeud)) {
-                        double coutNoeudDejaPresent = frontiere.get(frontiere.indexOf(nouveauNoeud)).getCost();
+                        double coutNoeudDejaPresent = frontiere.get(frontiere.indexOf(nouveauNoeud)).getHeuristic();
 
-                        if (coutNoeudDejaPresent > nouveauNoeud.getCost()) {
+                        if (coutNoeudDejaPresent > nouveauNoeud.getHeuristic()) {
                             // on le remplace par le nouvau noeud
                             frontiere.set(frontiere.indexOf(nouveauNoeud), nouveauNoeud);
                         }
@@ -73,5 +74,11 @@ public class UCS extends TreeSearch {
 
         end_node = SearchNode.makeRootSearchNode(this.initial_state);
         return false;
+    }
+
+    @Override
+    public double getHeuristic() {
+
+        return 0;
     }
 }

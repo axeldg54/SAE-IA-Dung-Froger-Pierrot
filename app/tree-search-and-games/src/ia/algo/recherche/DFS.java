@@ -5,8 +5,8 @@ import ia.framework.recherche.SearchNode;
 import ia.framework.recherche.SearchProblem;
 import ia.framework.recherche.TreeSearch;
 
-import java.util.ArrayDeque;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 public class DFS extends TreeSearch {
 
@@ -23,13 +23,14 @@ public class DFS extends TreeSearch {
     @Override
     public boolean solve() {
         var etatsConnus = new HashSet<State>();
-        var noeudsEtendre = new ArrayDeque<SearchNode>();
+        var frontiere = new LinkedList<SearchNode>();
 
-        noeudsEtendre.add(SearchNode.makeRootSearchNode(this.initial_state));
+        // Un noeud correspondant à l'état initial
+        frontiere.add(SearchNode.makeRootSearchNode(this.initial_state));
         etatsConnus.add(this.initial_state);
 
-        while (!noeudsEtendre.isEmpty()) {
-            var noeud = noeudsEtendre.remove();
+        while (!frontiere.isEmpty()) {
+            var noeud = frontiere.removeLast();
             var etat = noeud.getState();
 
             if (problem.isGoalState(etat)) {
@@ -37,15 +38,14 @@ public class DFS extends TreeSearch {
                 return true;
             }
 
-            var actions = problem.getActions(etat);
+            etatsConnus.add(etat);
 
-            for (var action : actions) {
+            for (var action : problem.getActions(etat)) {
                 var nouveauNoeud = SearchNode.makeChildSearchNode(problem, noeud, action);
                 var nouvelEtat = nouveauNoeud.getState();
 
-                if (!etatsConnus.contains(nouvelEtat)/* && !noeudsEtendre.contains(nouveauNoeud)*/) {
-                    noeudsEtendre.add(nouveauNoeud);
-                    etatsConnus.add(nouvelEtat);
+                if (!etatsConnus.contains(nouvelEtat) && !frontiere.contains(nouveauNoeud)) {
+                    frontiere.add(nouveauNoeud);
                 }
             }
         }

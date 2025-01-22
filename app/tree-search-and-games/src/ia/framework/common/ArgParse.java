@@ -4,10 +4,7 @@ import ia.algo.jeux.AlphaBetaPlayer;
 import ia.algo.jeux.HumanPlayer;
 import ia.algo.jeux.MinMaxPlayer;
 import ia.algo.jeux.RandomPlayer;
-import ia.algo.recherche.BFS;
-import ia.algo.recherche.DFS;
-import ia.algo.recherche.RandomTreeSearch;
-import ia.algo.recherche.UCS;
+import ia.algo.recherche.*;
 import ia.framework.jeux.Game;
 import ia.framework.jeux.Player;
 import ia.framework.recherche.SearchProblem;
@@ -158,7 +155,7 @@ public class ArgParse {
     }
 
     /**
-     * Traitement des options -v, -h
+     * Traitement des options : -v, -h
      *
      * @param args Le tableau de la ligne de commande
      */
@@ -273,7 +270,7 @@ public class ArgParse {
      * choisi ou celui par défaut
      *
      * @param algo Le nom de l'algorithme ou null
-     * @param p    Le problème a résoudre
+     * @param p    Le problème à résoudre
      * @param s    L'état initial
      * @return Une instance de l'algorithme
      */
@@ -290,15 +287,14 @@ public class ArgParse {
                 return new DFS(p, s);
             case "ucs":
                 return new UCS(p, s);
-            //case "gfs":
-            //return new GFS(p,s);
-            //case "astar":
-            //return new AStar(p,s);
+            case "gfs":
+                return new GFS(p, s);
+            case "astar":
+                return new AStar(p, s);
             default:
                 System.out.println("Algorithme inconnu");
                 usage();
                 System.exit(2);
-
         }
         return null;  // inatteignable, faire plaisir a javac
     }
