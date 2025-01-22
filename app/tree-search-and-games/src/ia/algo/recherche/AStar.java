@@ -1,7 +1,6 @@
 package ia.algo.recherche;
 
 import ia.framework.common.State;
-import ia.framework.recherche.HasHeuristic;
 import ia.framework.recherche.SearchNode;
 import ia.framework.recherche.SearchProblem;
 import ia.framework.recherche.TreeSearch;
@@ -9,7 +8,7 @@ import ia.framework.recherche.TreeSearch;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-public class AStar extends TreeSearch implements HasHeuristic {
+public class AStar extends TreeSearch {
 
     /**
      * Crée un algorithme de recherche
@@ -26,7 +25,7 @@ public class AStar extends TreeSearch implements HasHeuristic {
         var etatsConnus = new HashSet<State>();
         var frontiere = new LinkedList<SearchNode>();
 
-        // Un noeud correspondant à l'état initial
+        // Un nœud correspondant à l'état initial
         frontiere.add(SearchNode.makeRootSearchNode(this.initial_state));
         etatsConnus.add(this.initial_state);
 
@@ -35,7 +34,8 @@ public class AStar extends TreeSearch implements HasHeuristic {
             var minG = Double.MAX_VALUE;
 
             for (SearchNode n : frontiere) {
-                double g = n.getHeuristic();
+                // cout = g + h
+                double g = n.getHeuristic() + n.getCost();
 
                 if (g < minG) {
                     minG = g;
@@ -61,10 +61,11 @@ public class AStar extends TreeSearch implements HasHeuristic {
                     frontiere.add(nouveauNoeud);
                 } else {
                     if (frontiere.contains(nouveauNoeud)) {
-                        double coutNoeudDejaPresent = frontiere.get(frontiere.indexOf(nouveauNoeud)).getHeuristic();
+                        SearchNode jsp = frontiere.get(frontiere.indexOf(nouveauNoeud));
+                        double coutNoeudDejaPresent = jsp.getHeuristic() + jsp.getCost();
 
-                        if (coutNoeudDejaPresent > nouveauNoeud.getHeuristic()) {
-                            // on le remplace par le nouveau noeud
+                        if (coutNoeudDejaPresent > nouveauNoeud.getHeuristic() + nouveauNoeud.getCost()) {
+                            // on le remplace par le nouveau nœud
                             frontiere.set(frontiere.indexOf(nouveauNoeud), nouveauNoeud);
                         }
                     }
@@ -74,11 +75,5 @@ public class AStar extends TreeSearch implements HasHeuristic {
 
         end_node = SearchNode.makeRootSearchNode(this.initial_state);
         return false;
-    }
-
-    @Override
-    public double getHeuristic() {
-        // cout = g(n) + h(n)
-        return 0;
     }
 }

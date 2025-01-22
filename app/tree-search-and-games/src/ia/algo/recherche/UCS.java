@@ -63,7 +63,7 @@ public class UCS extends TreeSearch {
                         double coutNoeudDejaPresent = frontiere.get(frontiere.indexOf(nouveauNoeud)).getCost();
 
                         if (coutNoeudDejaPresent > nouveauNoeud.getCost()) {
-                            // on le remplace par le nouvau noeud
+                            // on le remplace par le nouveau noeud
                             frontiere.set(frontiere.indexOf(nouveauNoeud), nouveauNoeud);
                         }
                     }

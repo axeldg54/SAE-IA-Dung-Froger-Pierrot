@@ -1,7 +1,6 @@
 package ia.algo.recherche;
 
 import ia.framework.common.State;
-import ia.framework.recherche.HasHeuristic;
 import ia.framework.recherche.SearchNode;
 import ia.framework.recherche.SearchProblem;
 import ia.framework.recherche.TreeSearch;
@@ -9,7 +8,7 @@ import ia.framework.recherche.TreeSearch;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-public class GFS extends TreeSearch implements HasHeuristic {
+public class GFS extends TreeSearch {
 
     /**
      * Crée un algorithme de recherche
@@ -64,7 +63,7 @@ public class GFS extends TreeSearch implements HasHeuristic {
                         double coutNoeudDejaPresent = frontiere.get(frontiere.indexOf(nouveauNoeud)).getHeuristic();
 
                         if (coutNoeudDejaPresent > nouveauNoeud.getHeuristic()) {
-                            // on le remplace par le nouvau noeud
+                            // on le remplace par le nouveau nœud
                             frontiere.set(frontiere.indexOf(nouveauNoeud), nouveauNoeud);
                         }
                     }
@@ -74,11 +73,5 @@ public class GFS extends TreeSearch implements HasHeuristic {
 
         end_node = SearchNode.makeRootSearchNode(this.initial_state);
         return false;
-    }
-
-    @Override
-    public double getHeuristic() {
-
-        return 0;
     }
 }
