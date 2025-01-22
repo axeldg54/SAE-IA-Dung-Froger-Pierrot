@@ -11,7 +11,7 @@ public class KnnVsMlp {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         // Paramètres
         String mlpPath = "./app/perceptron/data/mlp.ser";
-        int nbTrainImages = 1000; // Nombre d'images pour l'entraînement (maximum 60000)
+        int nbTrainImages = 60000; // Nombre d'images pour l'entraînement (maximum 60000)
         int nbTestImages = 10000; // Nombre d'images à tester (maximum 10000)
         int nbIterations = 10; // Nombre d'itérations pour l'entraînement
         boolean number = false; // true pour les chiffres, false pour les vêtements
@@ -34,8 +34,8 @@ public class KnnVsMlp {
         donneesEntrainement.attribuerEtiquettes(labelsEntrainement.etiquettes);
 
         // Test de l'algorithme KNN
-        double tauxKnn = executeKNN(donneesEntrainement, donneesTest, nbTestImages);
-        System.out.println("Taux de réussite de l'algorithme KNN : " + tauxKnn + "%");
+        //double tauxKnn = executeKNN(donneesEntrainement, donneesTest, nbTestImages);
+        //System.out.println("Taux de réussite de l'algorithme KNN : " + tauxKnn + "%");
 
         // chargement ou création d'un réseau de neurones, entraînement et test
         MLP mlp;

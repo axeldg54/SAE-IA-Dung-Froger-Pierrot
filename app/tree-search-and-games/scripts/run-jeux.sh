@@ -13,7 +13,7 @@ DEPTH='-1'
 RUNS='15'
 VERBOSE="no"
 
-# Read cli arguments 
+# Read cli arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
         -p1|--player1)
@@ -75,7 +75,7 @@ Usage: `basename $0` [-h|--help] [-g|--game tictactoe|connect4|gomoku|mnk] [-p1|
 fi
 
 # Go go go 
-ARGS="-p1 ${P1} -p2 ${P2} -g=${GAME} -d=${DEPTH}"
+ARGS="-p1 ${P1} -p2 ${P2} -game ${GAME} -d ${DEPTH}"
 echo "# Running : $CMD $ARGS"
 echo "# Use -h for help."
 
