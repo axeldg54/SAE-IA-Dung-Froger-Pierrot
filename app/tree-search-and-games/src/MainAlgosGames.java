@@ -13,7 +13,7 @@ public class MainAlgosGames {
     public static final int MIN_N = 1000;
 
     public static void main(String[] args) throws IOException {
-        String[] nomsAlgos = new String[]{"bfs", "dfs", "ucs", "gfs", "astar"};
+        String[] nomsAlgos = new String[]{/*"bfs", "dfs", "ucs", */"gfs", "astar"};
 
         // On change uniquement N, puis uniquement K
         for (String nomAlgo : nomsAlgos) {
