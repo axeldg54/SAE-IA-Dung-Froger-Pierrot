@@ -6,13 +6,13 @@ public class MainMnist {
 
         // Chargement des images et des etiquettes à partir des fichiers
         Image imagesEntrainement = new Image(nbImages);
-        imagesEntrainement.load("./app/mnist/data/train-images.idx3-ubyte");
+        imagesEntrainement.load("./data/number/train-images.idx3-ubyte");
         Label labelsEntrainement = new Label();
-        labelsEntrainement.load("./app/mnist/data/train-labels.idx1-ubyte");
+        labelsEntrainement.load("./data/number/train-labels.idx1-ubyte");
         Image imagesTest = new Image(nbImages);
-        imagesTest.load("./app/mnist/data/t10k-images.idx3-ubyte");
+        imagesTest.load("./data/number//t10k-images.idx3-ubyte");
         Label labelsTest = new Label();
-        labelsTest.load("./app/mnist/data/t10k-labels.idx1-ubyte");
+        labelsTest.load("./data/number/t10k-labels.idx1-ubyte");
 
         // Création de l'objet Donnees pour stocker les imagesEntrainement et les etiquettes
         Donnees donneesTest = new Donnees(imagesTest.imagettes);

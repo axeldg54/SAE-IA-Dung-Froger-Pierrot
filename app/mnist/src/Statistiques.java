@@ -12,10 +12,6 @@ public class Statistiques {
     public double tauxReussiteKnn(int nbImages) {
         int reussite = 0;
         int echec = 0;
-        if (donneesTest.imagettes.size() < nbImages) {
-            System.out.println("Attention, le nombre d'images demandé est supérieur au nombre d'images disponibles");
-            nbImages = donneesTest.imagettes.size();
-        }
         try (ProgressBar pb = new ProgressBar("Test of KNN", nbImages)) {
             for (int i = 0; i < nbImages; i++) {
                 if (algo.compare(donneesTest.imagettes.get(i)) == donneesTest.imagettes.get(i).etiquette) {

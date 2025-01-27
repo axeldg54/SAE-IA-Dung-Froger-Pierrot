@@ -1,6 +1,7 @@
 *.idea
 *.depcache
 *.iml
+*.ser
 out/
 doc/
 dist/
