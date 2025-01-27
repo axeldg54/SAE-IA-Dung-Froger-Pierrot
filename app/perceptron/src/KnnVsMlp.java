@@ -1,6 +1,8 @@
 import lib.MLP;
+import lib.TransferFunction;
 import me.tongfei.progressbar.ProgressBar;
 import transferFunction.Sigmoide;
+import transferFunction.Tanh;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -12,7 +14,7 @@ public class KnnVsMlp {
 		// Paramètres
 		String mlpPath = "./app/perceptron/data/mlp.ser";
 		int nbImages = 10000; // Maximum 60000
-		int nbIterations = 10;
+		int nbIterations = 100;
 		boolean save = true;
 		boolean load = false;
 		boolean train = true;
@@ -38,46 +40,61 @@ public class KnnVsMlp {
 		System.out.println(resKnn);
 		
 		// chargement ou création d'un réseau de neurones, entraînement et test
-//		MLP mlp = load ? MLP.load(mlpPath) : new MLP(new int[]{784, 100, 10}, 0.1, new Sigmoide());
-//		if (train) {
-//			trainWithImages(donneesEntrainement, mlp, nbImages, nbIterations);
-//		}
-//		double resNeurones = testWithImages(donneesTest, mlp, nbImages);
-//		System.out.println(resNeurones);
-//
-//		// Serialization du réseau de neurones
-//		if (save) {
-//			mlp.save(mlpPath);
-//		}
+		//		MLP mlp = load ? MLP.load(mlpPath) : new MLP(new int[]{784, 100, 10}, 0.1, new Sigmoide());
+		//		if (train) {
+		//			trainWithImages(donneesEntrainement, mlp, nbImages, nbIterations);
+		//		}
+		//		double resNeurones = testWithImages(donneesTest, mlp, nbImages);
+		//		System.out.println(resNeurones);
+		//
+		//		// Serialization du réseau de neurones
+		//		if (save) {
+		//			mlp.save(mlpPath);
+		//		}
 		
-		BufferedWriter file = new BufferedWriter(new FileWriter("./app/perceptron/data/mlp3.csv"));
-		file.write("nbNeuronesCaches1;nbNeuronesCaches2;taux;resultat en %");
+		BufferedWriter file = new BufferedWriter(new FileWriter("./app/perceptron/data/mlp_10000EntrainementEtTest_100iterations2.csv"));
+		file.write("Fonction de transfert;nbNeuronesCaches1;nbNeuronesCaches2;taux;resultat mlp en %");
 		file.newLine();
 		
 		double[] l = {0.01, 0.05, 0.1, 0.3, 0.5};
+		TransferFunction[] func = {new Sigmoide(), new Tanh()};
 		
-		//for (int i = 10; i <= 10000; i += 100) { // parcours de différents nombres d'images
-//		for (int i = 0; i <= 1; i++) { // Données mélangées ou non
-			for (int j = 25; j <= 101; j += 25) { // parcours de différents nombres de neurones cachés (première couche cachée)
-				for (int k = 0; k <= 100; k += 25) { // parcours de différents nombres de neurones cachés (seconde couche cachée)
-					for (double lCourant : l) { // parcours de différents taux d'apprentissage
-						MLP mlp2 = new MLP(new int[]{784, j, k, 10}, lCourant, new Sigmoide());
-						//						if (i == 1) {
-						//							donneesEntrainement = donneesEntrainement.getRandom();
-						//						}
+		// plus de 24h d'exécution pour ces boucles imbriquées
+		for (int j = 200; j <= 300; j += 50) { // parcours de différents nombres de neurones cachés (première couche cachée)
+			for (int k = 0; k <= 300; k += 100) { // parcours de différents nombres de neurones cachés (seconde couche cachée)
+				for (double lCourant : l) { // parcours de différents taux d'apprentissage
+					for (TransferFunction functionCourante : func) {
+						
+						MLP mlp2 = new MLP(new int[]{784, j, k, 10}, lCourant, functionCourante);
+						
+						if (k == 0) { // dans le cas où la deuxième couche cachée de neurones est vide : on ne l'écrit tout simplement pas
+							mlp2 = new MLP(new int[]{784, j, 10}, lCourant, functionCourante);
+						}
+						
+						// on mélange les données
+						donneesEntrainement = donneesEntrainement.shuffle();
+						donneesTest = donneesTest.shuffle();
+						
+						// entrainement du réseau de neurones
 						trainWithImages(donneesEntrainement, mlp2, nbImages, nbIterations);
-						double res2 = testWithImages(donneesTest, mlp2, nbImages);
+						
+						// test du réseau de neurones
+						double resmlp2 = testWithImages(donneesTest, mlp2, nbImages);
+						
+						// on écrit les résultats obtenus dans le fichier de sauvegarde
 						file.write("""
-								%d;%d;%f;%f
-								""".formatted(j, k, lCourant, res2));
-						System.out.println("l = " + l);
+								%s;%d;%d;%f;%f
+								""".formatted(functionCourante.toString(), j, k, lCourant, resmlp2));
+						
+						System.out.println("l = " + functionCourante);
 					}
-					System.out.println("k = " + k);
+					System.out.println("l = " + lCourant);
 				}
-				System.out.println("j = " + j);
+				System.out.println("k = " + k);
 			}
-//		}
-		//}
+			System.out.println("j = " + j);
+		}
+		
 		file.close();
 		
 	}
@@ -115,18 +132,18 @@ public class KnnVsMlp {
 			nbImages = donneesTest.imagettes.size();
 		}
 		int nbReussites = 0;
-//		try (ProgressBar pb = new ProgressBar("Test of the MLP", nbImages)) {
-			for (int i = 0; i < nbImages; i++) {
-				double[] inputs = Image.imagetteToInput(donneesTest.imagettes.get(i));
-				double[] result = mlp.execute(inputs);
-				int resultInt = getMax(result);
-//				System.out.println("Attendu : " + donneesTest.imagettes.get(i).etiquette + " - Trouvé : [" + resultInt + "] " + Arrays.toString(Arrays.stream(result).map(Math::round).toArray()));
-				if (donneesTest.imagettes.get(i).etiquette == resultInt) {
-					nbReussites++;
-				}
-//				pb.step();
+		//		try (ProgressBar pb = new ProgressBar("Test of the MLP", nbImages)) {
+		for (int i = 0; i < nbImages; i++) {
+			double[] inputs = Image.imagetteToInput(donneesTest.imagettes.get(i));
+			double[] result = mlp.execute(inputs);
+			int resultInt = getMax(result);
+			//				System.out.println("Attendu : " + donneesTest.imagettes.get(i).etiquette + " - Trouvé : [" + resultInt + "] " + Arrays.toString(Arrays.stream(result).map(Math::round).toArray()));
+			if (donneesTest.imagettes.get(i).etiquette == resultInt) {
+				nbReussites++;
 			}
-//		}
+			//				pb.step();
+		}
+		//		}
 		double pourcentageDeReussite = (double) nbReussites / nbImages * 100;
 		return pourcentageDeReussite;
 	}
@@ -144,17 +161,17 @@ public class KnnVsMlp {
 			System.out.println("Attention, le nombre d'images demandé est supérieur au nombre d'images disponibles");
 			nbImages = donneesEntrainement.imagettes.size();
 		}
-//		try (ProgressBar pb = new ProgressBar("Train of the MLP", nbIterations)) {
-			for (int i = 0; i < nbIterations; i++) {
-				for (int j = 0; j < nbImages; j++) {
-					double[] inputs = Image.imagetteToInput(donneesEntrainement.imagettes.get(j));
-					double[] outputs = new double[10];
-					outputs[donneesEntrainement.imagettes.get(j).etiquette] = 1;
-					mlp.backPropagate(inputs, outputs);
-				}
-//				pb.step();
+		//		try (ProgressBar pb = new ProgressBar("Train of the MLP", nbIterations)) {
+		for (int i = 0; i < nbIterations; i++) {
+			for (int j = 0; j < nbImages; j++) {
+				double[] inputs = Image.imagetteToInput(donneesEntrainement.imagettes.get(j));
+				double[] outputs = new double[10];
+				outputs[donneesEntrainement.imagettes.get(j).etiquette] = 1;
+				mlp.backPropagate(inputs, outputs);
 			}
-//		}
+			//				pb.step();
+		}
+		//		}
 	}
 	
 	

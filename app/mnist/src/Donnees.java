@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Donnees {
 
@@ -12,6 +14,11 @@ public class Donnees {
         for (int i = 0; i < imagettes.size(); i++) {
             imagettes.get(i).etiquette = etiquettes.get(i);
         }
+    }
+    
+    public Donnees shuffle() {
+        Collections.shuffle(this.imagettes);
+        return this;
     }
 
 }
