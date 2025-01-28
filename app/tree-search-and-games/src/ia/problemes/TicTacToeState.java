@@ -37,15 +37,12 @@ public class TicTacToeState extends MnkGameState {
      * @return la valeur du jeu
      **/
     protected double evaluationFunction() {
-
         int pos_x = this.possibleLines(X);
         int pos_o = this.possibleLines(O);
 
-        double value = pos_x - pos_o;
-
-//         System.out.println("Possibilities: X = "+pos_x+", O = "+pos_o+
+        //         System.out.println("Possibilities: X = "+pos_x+", O = "+pos_o+
 //        ". Value = "+value);
-        return value;
+        return pos_x - pos_o;
     }
 
     // API privée 
@@ -159,6 +156,4 @@ public class TicTacToeState extends MnkGameState {
 //        System.out.println("Possible diagonal for "+ (char) player+ " : "+res);
         return res;
     }
-
-
 }

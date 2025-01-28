@@ -8,7 +8,7 @@ import ia.framework.recherche.TreeSearch;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-public class UCS extends TreeSearch {
+public class AStar extends TreeSearch {
 
     /**
      * Crée un algorithme de recherche
@@ -16,7 +16,7 @@ public class UCS extends TreeSearch {
      * @param p Le problème à résoudre
      * @param s L'état initial
      */
-    public UCS(SearchProblem p, State s) {
+    public AStar(SearchProblem p, State s) {
         super(p, s);
     }
 
@@ -25,7 +25,7 @@ public class UCS extends TreeSearch {
         var etatsConnus = new HashSet<State>();
         var frontiere = new LinkedList<SearchNode>();
 
-        // Un noeud correspondant à l'état initial
+        // Un nœud correspondant à l'état initial
         frontiere.add(SearchNode.makeRootSearchNode(this.initial_state));
         etatsConnus.add(this.initial_state);
 
@@ -34,7 +34,8 @@ public class UCS extends TreeSearch {
             var minG = Double.MAX_VALUE;
 
             for (SearchNode n : frontiere) {
-                double g = n.getCost();
+                // cout = g + h
+                double g = n.getHeuristic() + n.getCost();
 
                 if (g < minG) {
                     minG = g;
@@ -60,10 +61,11 @@ public class UCS extends TreeSearch {
                     frontiere.add(nouveauNoeud);
                 } else {
                     if (frontiere.contains(nouveauNoeud)) {
-                        double coutNoeudDejaPresent = frontiere.get(frontiere.indexOf(nouveauNoeud)).getCost();
+                        SearchNode jsp = frontiere.get(frontiere.indexOf(nouveauNoeud));
+                        double coutNoeudDejaPresent = jsp.getHeuristic() + jsp.getCost();
 
-                        if (coutNoeudDejaPresent > nouveauNoeud.getCost()) {
-                            // on le remplace par le nouveau noeud
+                        if (coutNoeudDejaPresent > nouveauNoeud.getHeuristic() + nouveauNoeud.getCost()) {
+                            // on le remplace par le nouveau nœud
                             frontiere.set(frontiere.indexOf(nouveauNoeud), nouveauNoeud);
                         }
                     }

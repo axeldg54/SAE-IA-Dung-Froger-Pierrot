@@ -10,15 +10,15 @@ import java.io.IOException;
 public class MainAlgosGames {
 
     public static final int MIN_K = 2;
-    public static final int MIN_N = 100;
+    public static final int MIN_N = 1000;
 
     public static void main(String[] args) throws IOException {
-        String[] nomsAlgos = new String[]{"bfs", "dfs"/*, "ucs"*/};
+        String[] nomsAlgos = new String[]{/*"bfs", "dfs", "ucs", */"gfs", "astar"};
 
         // On change uniquement N, puis uniquement K
         for (String nomAlgo : nomsAlgos) {
-            enregistrerFichier(nomAlgo, 100, "N", MIN_N, 300);
-            enregistrerFichier(nomAlgo, 100, "K", MIN_K, 100);
+            enregistrerFichier(nomAlgo, 100, "N", MIN_N, 10000);
+            enregistrerFichier(nomAlgo, 100, "K", MIN_K, 20);
         }
     }
 
@@ -26,12 +26,12 @@ public class MainAlgosGames {
         BufferedWriter file = new BufferedWriter(
                 new FileWriter("./app/tree-search-and-games/data/" + algorithme + "/" + algorithme + "-" + parametre + ".csv")
         );
-        file.write("Algo;Problème;Seed;N;K;Temps;");
+        file.write("Algo;Problème;Seed;N;K;Cout;Temps;");
         file.newLine();
 
         String[] argsCustom;
 
-        for (int i = valInit; i < valMax; i++) {
+        for (int i = valInit; i <= valMax; i += valMax / 10) {
             if (parametre.equals("N")) {
                 argsCustom = new String[]{"-prob", "dum", "-algo", algorithme, "-n",
                         String.valueOf(i), "-k", String.valueOf(MIN_K), "-r", String.valueOf(seed)};
@@ -58,14 +58,14 @@ public class MainAlgosGames {
 
             if (parametre.equals("N")) {
                 file.write("""
-                        %s;%s;%d;%d;%d;%d;
+                        %s;%s;%d;%d;%d;%f;%d;
                         """.formatted(algo_name, prob_name, seed,
-                        i, MIN_K, estimatedTime));
+                        i, MIN_K, algo.getEndNode().getCost(), estimatedTime));
             } else {
                 file.write("""
-                        %s;%s;%d;%d;%d;%d;
+                        %s;%s;%d;%d;%d;%f;%d;
                         """.formatted(algo_name, prob_name, seed,
-                        MIN_N, i, estimatedTime));
+                        MIN_N, i, algo.getEndNode().getCost(), estimatedTime));
             }
             System.out.println(algo_name);
             System.out.println(parametre + " : " + i);

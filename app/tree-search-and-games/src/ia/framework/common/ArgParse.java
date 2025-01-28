@@ -4,10 +4,7 @@ import ia.algo.jeux.AlphaBetaPlayer;
 import ia.algo.jeux.HumanPlayer;
 import ia.algo.jeux.MinMaxPlayer;
 import ia.algo.jeux.RandomPlayer;
-import ia.algo.recherche.BFS;
-import ia.algo.recherche.DFS;
-import ia.algo.recherche.RandomTreeSearch;
-import ia.algo.recherche.UCS;
+import ia.algo.recherche.*;
 import ia.framework.jeux.Game;
 import ia.framework.jeux.Player;
 import ia.framework.recherche.SearchProblem;
@@ -158,7 +155,7 @@ public class ArgParse {
     }
 
     /**
-     * Traitement des options -v, -h
+     * Traitement des options : -v, -h
      *
      * @param args Le tableau de la ligne de commande
      */
@@ -240,25 +237,25 @@ public class ArgParse {
      * Factory qui retourne une instance du problème choisie ou celui par défaut
      *
      * @param p_type le type de joueur
-     * @param game   instance du jeux
+     * @param game   instance du jeu
      * @param is_p1  vrai si joueur num 1
      * @param args   les arguments de ligne de commande
      * @return Une instance de player
      */
-    public static Player makePlayer(String p_type, Game game,
-                                    boolean is_p1, String[] args) {
+    public static Player makePlayer(String p_type, Game game, boolean is_p1, String[] args) {
         if (p_type == null) {
             p_type = "random";
         }
+
         switch (p_type) {
             case "random":
                 return new RandomPlayer(game, is_p1);
             case "human":
                 return new HumanPlayer(game, is_p1);
             case "minmax":
-                return new MinMaxPlayer(game, is_p1);
+                return new MinMaxPlayer(game, is_p1, getValueOfParam(args, "-d", Integer.MAX_VALUE));
             case "alphabeta":
-                return new AlphaBetaPlayer(game, is_p1);
+                return new AlphaBetaPlayer(game, is_p1, getValueOfParam(args, "-d", Integer.MAX_VALUE));
             default:
                 System.out.println("Joueur inconnu");
                 usage();
@@ -273,7 +270,7 @@ public class ArgParse {
      * choisi ou celui par défaut
      *
      * @param algo Le nom de l'algorithme ou null
-     * @param p    Le problème a résoudre
+     * @param p    Le problème à résoudre
      * @param s    L'état initial
      * @return Une instance de l'algorithme
      */
@@ -290,15 +287,14 @@ public class ArgParse {
                 return new DFS(p, s);
             case "ucs":
                 return new UCS(p, s);
-            //case "gfs":
-            //return new GFS(p,s);
-            //case "astar":
-            //return new AStar(p,s);
+            case "gfs":
+                return new GFS(p, s);
+            case "astar":
+                return new AStar(p, s);
             default:
                 System.out.println("Algorithme inconnu");
                 usage();
                 System.exit(2);
-
         }
         return null;  // inatteignable, faire plaisir a javac
     }

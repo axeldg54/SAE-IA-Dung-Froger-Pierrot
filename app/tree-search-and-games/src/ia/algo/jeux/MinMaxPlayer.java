@@ -10,6 +10,7 @@ import ia.framework.jeux.Player;
 public class MinMaxPlayer extends Player {
 
     private int depth;
+    private int maxDepth;
 
     /**
      * Représente un joueur utilisant l'algorithme Minimax.
@@ -17,23 +18,20 @@ public class MinMaxPlayer extends Player {
      * @param g          l'instance du jeu
      * @param player_one indique si c'est le joueur 1
      */
-    public MinMaxPlayer(Game g, boolean player_one) {
+    public MinMaxPlayer(Game g, boolean player_one, int maxDepth) {
         super(g, player_one);
-        name = "MinMax";
+        this.maxDepth = maxDepth;
         this.depth = 0;
+        name = "MinMax";
     }
 
     @Override
     public Action getMove(GameState state) {
         ActionValuePair bestMove;
-
         this.depth = 0;
 
-        if (player == PLAYER1) {
-            bestMove = maxVal(state);
-        } else {
-            bestMove = minVal(state);
-        }
+        if (player == PLAYER1) bestMove = maxVal(state);
+        else bestMove = minVal(state);
 
         System.out.println("Profondeur parcourue : " + depth);
 
@@ -44,14 +42,14 @@ public class MinMaxPlayer extends Player {
      * Fonction Minimax pour maximiser le score.
      *
      * @param state l'état actuel du jeu
-     * @return le couple action-valeur optimal pour le joueur MAX
+     * @return le couple action-valeur optimale pour le joueur MAX
      */
     public ActionValuePair maxVal(GameState state) {
         depth++;
 
         // Vérifie si l'état est final
         if (state.isFinalState()) {
-            depth--;
+            System.out.println(depth);
             return new ActionValuePair(null, state.getGameValue());
         }
 
@@ -60,9 +58,7 @@ public class MinMaxPlayer extends Player {
 
         // Parcourt toutes les actions possibles
         for (Action action : game.getActions(state)) {
-            
             this.incStateCounter(); // compteur d'états visités
-            
             State nextState = game.doAction(state, action);
 
             // Évalue la valeur minimale de l'adversaire
@@ -73,7 +69,7 @@ public class MinMaxPlayer extends Player {
                 bestAction = action;
             }
         }
-
+        depth -= game.getActions(state).size();
         return new ActionValuePair(bestAction, maxValue);
     }
 
@@ -81,14 +77,14 @@ public class MinMaxPlayer extends Player {
      * Fonction Minimax pour minimiser le score.
      *
      * @param state l'état actuel du jeu
-     * @return le couple action-valeur optimal pour le joueur MIN
+     * @return le couple action-valeur optimale pour le joueur MIN
      */
     public ActionValuePair minVal(GameState state) {
         depth++;
 
         // Vérifie si l'état est final
         if (state.isFinalState()) {
-            depth--;
+            System.out.println(depth);
             return new ActionValuePair(null, state.getGameValue());
         }
 
@@ -97,9 +93,7 @@ public class MinMaxPlayer extends Player {
 
         // Parcourt toutes les actions possibles
         for (Action action : game.getActions(state)) {
-            
             this.incStateCounter(); // compteur d'états visités
-            
             State nextState = game.doAction(state, action);
 
             // Évalue la valeur maximale de l'adversaire
@@ -110,7 +104,7 @@ public class MinMaxPlayer extends Player {
                 bestAction = action;
             }
         }
-
+        depth -= game.getActions(state).size();
         return new ActionValuePair(bestAction, minValue);
     }
 }

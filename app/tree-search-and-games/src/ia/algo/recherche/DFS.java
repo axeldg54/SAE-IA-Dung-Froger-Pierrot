@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 public class DFS extends TreeSearch {
-    
+
     /**
      * Crée un algorithme de recherche
      *
@@ -19,37 +19,37 @@ public class DFS extends TreeSearch {
     public DFS(SearchProblem p, State s) {
         super(p, s);
     }
-    
+
     @Override
     public boolean solve() {
         var etatsConnus = new HashSet<State>();
-        var noeudsEtendre = new LinkedList<SearchNode>();
-        
-        noeudsEtendre.add(SearchNode.makeRootSearchNode(this.initial_state));
+        var frontiere = new LinkedList<SearchNode>();
+
+        // Un noeud correspondant à l'état initial
+        frontiere.add(SearchNode.makeRootSearchNode(this.initial_state));
         etatsConnus.add(this.initial_state);
-        
-        while (!noeudsEtendre.isEmpty()) {
-            var noeud = noeudsEtendre.removeFirst();
+
+        while (!frontiere.isEmpty()) {
+            var noeud = frontiere.removeLast();
             var etat = noeud.getState();
-            
+
             if (problem.isGoalState(etat)) {
                 this.end_node = noeud;
                 return true;
             }
-            
-            var actions = problem.getActions(etat);
-            
-            for (var action : actions) {
+
+            etatsConnus.add(etat);
+
+            for (var action : problem.getActions(etat)) {
                 var nouveauNoeud = SearchNode.makeChildSearchNode(problem, noeud, action);
                 var nouvelEtat = nouveauNoeud.getState();
-                
-                if (!etatsConnus.contains(nouvelEtat)/* && !noeudsEtendre.contains(nouveauNoeud)*/) {
-                    noeudsEtendre.addFirst(nouveauNoeud); // First difference
-                    etatsConnus.add(nouvelEtat);
+
+                if (!etatsConnus.contains(nouvelEtat) && !frontiere.contains(nouveauNoeud)) {
+                    frontiere.add(nouveauNoeud);
                 }
             }
         }
-        
+
         end_node = SearchNode.makeRootSearchNode(this.initial_state);
         return false;
     }

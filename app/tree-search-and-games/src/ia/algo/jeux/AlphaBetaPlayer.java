@@ -27,7 +27,7 @@ public class AlphaBetaPlayer extends Player {
 		super(g, player_one);
 		name = "MinMaxAlphaBeta";
 	}
-	
+
 	@Override
 	public Action getMove(GameState state) {
 		ActionValuePair bestMove;
@@ -45,10 +45,10 @@ public class AlphaBetaPlayer extends Player {
 				bestMove = minVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
 			}
 		}
-		
+
 		return bestMove.getAction();
 	}
-	
+
 	/**
 	 * Fonction Minimax pour maximiser le score.
 	 *
@@ -60,36 +60,36 @@ public class AlphaBetaPlayer extends Player {
 		if (state.isFinalState()) {
 			return new ActionValuePair(null, state.getGameValue());
 		}
-		
+
 		double maxValue = Double.NEGATIVE_INFINITY;
 		Action bestAction = null;
-		
+
 		// Parcourt toutes les actions possibles
 		for (Action action : game.getActions(state)) {
 			State nextState = game.doAction(state, action);
-			
+
 			this.incStateCounter(); // compteur d'états visités
-			
+
 			// Évalue la valeur minimale de l'adversaire
 			ActionValuePair nextActionValuePair = minVal((GameState) nextState, alpha, beta);
-			
+
 			if (nextActionValuePair.getValue() >= maxValue) {
 				maxValue = nextActionValuePair.getValue();
-				
+
 				if (maxValue > alpha) {
 					alpha = maxValue;
 					bestAction = action;
 				}
 			}
-			
+
 			if (maxValue >= beta) {
 				return new ActionValuePair(bestAction, maxValue);
 			}
 		}
-		
+
 		return new ActionValuePair(bestAction, maxValue);
 	}
-	
+
 	/**
 	 * Fonction Minimax pour minimiser le score.
 	 *
@@ -101,33 +101,33 @@ public class AlphaBetaPlayer extends Player {
 		if (state.isFinalState()) {
 			return new ActionValuePair(null, state.getGameValue());
 		}
-		
+
 		double minValue = Double.POSITIVE_INFINITY;
 		Action bestAction = null;
-		
+
 		// Parcourt toutes les actions possibles
 		for (Action action : game.getActions(state)) {
 			State nextState = game.doAction(state, action);
-			
+
 			this.incStateCounter(); // compteur d'états visités
-			
+
 			// Évalue la valeur maximale de l'adversaire
 			ActionValuePair nextActionValuePair = maxVal((GameState) nextState, alpha, beta);
-			
+
 			if (nextActionValuePair.getValue() <= minValue) {
 				minValue = nextActionValuePair.getValue();
-				
+
 				if (minValue < beta) {
 					beta = minValue;
 					bestAction = action;
 				}
 			}
-			
+
 			if (minValue <= alpha) {
 				return new ActionValuePair(bestAction, minValue);
 			}
 		}
-		
+
 		return new ActionValuePair(bestAction, minValue);
 	}
 
