@@ -10,6 +10,7 @@ import ia.framework.jeux.Player;
 public class AlphaBetaPlayer extends Player {
 
     private int depth;
+    private final int maxDepth;
 
     /**
      * Représente un joueur utilisant l'algorithme Minimax.
@@ -17,21 +18,22 @@ public class AlphaBetaPlayer extends Player {
      * @param g          l'instance du jeu
      * @param player_one indique si c'est le joueur 1
      */
-    public AlphaBetaPlayer(Game g, boolean player_one, int depth) {
+    public AlphaBetaPlayer(Game g, boolean player_one, int maxDepth) {
         super(g, player_one);
+        this.maxDepth = maxDepth;
+        this.depth = 0;
         name = "MinMaxAlphaBeta";
-        this.depth = depth;
     }
 
     @Override
     public Action getMove(GameState state) {
         ActionValuePair bestMove;
+        this.depth = maxDepth;
 
-        if (player == PLAYER1) {
-            bestMove = maxVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, this.depth);
-        } else {
-            bestMove = minVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, this.depth);
-        }
+        if (player == PLAYER1) bestMove = maxVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, maxDepth);
+        else bestMove = minVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, maxDepth);
+
+        System.out.println("Profondeur maximale atteinte : " + this.depth);
 
         return bestMove.getAction();
     }
@@ -46,6 +48,10 @@ public class AlphaBetaPlayer extends Player {
         // Vérifie si l'état est final
         if (state.isFinalState()) {
             return new ActionValuePair(null, state.getGameValue());
+        }
+
+        if (depth < this.depth) {
+            this.depth = depth;
         }
 
         double maxValue = Double.NEGATIVE_INFINITY;

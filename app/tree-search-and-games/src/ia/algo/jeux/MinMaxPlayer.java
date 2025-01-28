@@ -33,7 +33,7 @@ public class MinMaxPlayer extends Player {
         if (player == PLAYER1) bestMove = maxVal(state, maxDepth);
         else bestMove = minVal(state, maxDepth);
 
-        System.out.println("Profondeur maximale atteinte");
+        System.out.println("Profondeur maximale atteinte : " + this.depth);
 
         return bestMove.getAction();
     }
@@ -45,7 +45,7 @@ public class MinMaxPlayer extends Player {
      * @return le couple action-valeur optimale pour le joueur MAX
      */
     public ActionValuePair maxVal(GameState state, int depth) {
-        System.out.println("Profondeur (max) : " + this.depth);
+//        System.out.println("Profondeur (max) : " + this.depth);
 
         // Vérifie si l'état est final ou profondeur max atteinte
         if (state.isFinalState()) {
@@ -73,8 +73,9 @@ public class MinMaxPlayer extends Player {
                     bestAction = action;
                 }
             } else {
+                System.out.println("Profondeur max dépassée !");
                 maxValue = state.getGameValue();
-                bestAction = action;
+                bestAction = game.getActions(state).get((int) Math.floor(Math.random() * game.getActions(state).size()));
             }
         }
         return new ActionValuePair(bestAction, maxValue);
@@ -87,7 +88,7 @@ public class MinMaxPlayer extends Player {
      * @return le couple action-valeur optimale pour le joueur MIN
      */
     public ActionValuePair minVal(GameState state, int depth) {
-        System.out.println("Profondeur (min) : " + this.depth);
+//        System.out.println("Profondeur (min) : " + this.depth);
 
         // Vérifie si l'état est final ou profondeur max atteinte
         if (state.isFinalState()) {
@@ -115,8 +116,9 @@ public class MinMaxPlayer extends Player {
                     bestAction = action;
                 }
             } else {
+                System.out.println("Profondeur max dépassée !");
                 minValue = state.getGameValue();
-                bestAction = action;
+                bestAction = game.getActions(state).get((int) Math.floor(Math.random() * game.getActions(state).size()));
             }
         }
         return new ActionValuePair(bestAction, minValue);
