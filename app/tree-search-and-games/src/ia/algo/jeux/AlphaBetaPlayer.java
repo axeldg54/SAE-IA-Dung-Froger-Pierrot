@@ -9,211 +9,200 @@ import ia.framework.jeux.Player;
 
 public class AlphaBetaPlayer extends Player {
 
-	private int depth;
+    private int depth;
 
-	/**
-	 * Représente un joueur utilisant l'algorithme Minimax.
-	 *
-	 * @param g          l'instance du jeu
-	 * @param player_one indique si c'est le joueur 1
-	 */
-	public AlphaBetaPlayer(Game g, boolean player_one, int depth) {
-		super(g, player_one);
-		name = "MinMaxAlphaBeta";
-		this.depth = depth;
-	}
+    /**
+     * Représente un joueur utilisant l'algorithme Minimax.
+     *
+     * @param g          l'instance du jeu
+     * @param player_one indique si c'est le joueur 1
+     */
+    public AlphaBetaPlayer(Game g, boolean player_one, int depth) {
+        super(g, player_one);
+        name = "MinMaxAlphaBeta";
+        this.depth = depth;
+    }
 
-	public AlphaBetaPlayer(Game g, boolean player_one) {
-		super(g, player_one);
-		name = "MinMaxAlphaBeta";
-	}
+    @Override
+    public Action getMove(GameState state) {
+        ActionValuePair bestMove;
 
-	@Override
-	public Action getMove(GameState state) {
-		ActionValuePair bestMove;
+        if (player == PLAYER1) {
+            bestMove = maxVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, this.depth);
+        } else {
+            bestMove = minVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, this.depth);
+        }
 
-		if (player == PLAYER1) {
-			if (this.depth > 0) {
-				bestMove = maxVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, this.depth);
-			} else {
-				bestMove = maxVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-			}
-		} else {
-			if (this.depth > 0) {
-				bestMove = minVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, this.depth);
-			} else {
-				bestMove = minVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-			}
-		}
+        return bestMove.getAction();
+    }
 
-		return bestMove.getAction();
-	}
+    /**
+     * Fonction Minimax pour maximiser le score.
+     *
+     * @param state l'état actuel du jeu
+     * @return le couple action-valeur optimal pour le joueur MAX
+     */
+    public ActionValuePair maxVal(GameState state, double alpha, double beta) {
+        // Vérifie si l'état est final
+        if (state.isFinalState()) {
+            return new ActionValuePair(null, state.getGameValue());
+        }
 
-	/**
-	 * Fonction Minimax pour maximiser le score.
-	 *
-	 * @param state l'état actuel du jeu
-	 * @return le couple action-valeur optimal pour le joueur MAX
-	 */
-	public ActionValuePair maxVal(GameState state, double alpha, double beta) {
-		// Vérifie si l'état est final
-		if (state.isFinalState()) {
-			return new ActionValuePair(null, state.getGameValue());
-		}
+        double maxValue = Double.NEGATIVE_INFINITY;
+        Action bestAction = null;
 
-		double maxValue = Double.NEGATIVE_INFINITY;
-		Action bestAction = null;
+        // Parcourt toutes les actions possibles
+        for (Action action : game.getActions(state)) {
+            State nextState = game.doAction(state, action);
 
-		// Parcourt toutes les actions possibles
-		for (Action action : game.getActions(state)) {
-			State nextState = game.doAction(state, action);
+            this.incStateCounter(); // compteur d'états visités
 
-			this.incStateCounter(); // compteur d'états visités
+            // Évalue la valeur minimale de l'adversaire
+            ActionValuePair nextActionValuePair = minVal((GameState) nextState, alpha, beta);
 
-			// Évalue la valeur minimale de l'adversaire
-			ActionValuePair nextActionValuePair = minVal((GameState) nextState, alpha, beta);
+            if (nextActionValuePair.getValue() >= maxValue) {
+                maxValue = nextActionValuePair.getValue();
 
-			if (nextActionValuePair.getValue() >= maxValue) {
-				maxValue = nextActionValuePair.getValue();
+                if (maxValue > alpha) {
+                    alpha = maxValue;
+                    bestAction = action;
+                }
+            }
 
-				if (maxValue > alpha) {
-					alpha = maxValue;
-					bestAction = action;
-				}
-			}
+            if (maxValue >= beta) {
+                return new ActionValuePair(bestAction, maxValue);
+            }
+        }
 
-			if (maxValue >= beta) {
-				return new ActionValuePair(bestAction, maxValue);
-			}
-		}
+        return new ActionValuePair(bestAction, maxValue);
+    }
 
-		return new ActionValuePair(bestAction, maxValue);
-	}
+    /**
+     * Fonction Minimax pour minimiser le score.
+     *
+     * @param state l'état actuel du jeu
+     * @return le couple action-valeur optimal pour le joueur MIN
+     */
+    public ActionValuePair minVal(GameState state, double alpha, double beta) {
+        // Vérifie si l'état est final
+        if (state.isFinalState()) {
+            return new ActionValuePair(null, state.getGameValue());
+        }
 
-	/**
-	 * Fonction Minimax pour minimiser le score.
-	 *
-	 * @param state l'état actuel du jeu
-	 * @return le couple action-valeur optimal pour le joueur MIN
-	 */
-	public ActionValuePair minVal(GameState state, double alpha, double beta) {
-		// Vérifie si l'état est final
-		if (state.isFinalState()) {
-			return new ActionValuePair(null, state.getGameValue());
-		}
+        double minValue = Double.POSITIVE_INFINITY;
+        Action bestAction = null;
 
-		double minValue = Double.POSITIVE_INFINITY;
-		Action bestAction = null;
+        // Parcourt toutes les actions possibles
+        for (Action action : game.getActions(state)) {
+            State nextState = game.doAction(state, action);
 
-		// Parcourt toutes les actions possibles
-		for (Action action : game.getActions(state)) {
-			State nextState = game.doAction(state, action);
+            this.incStateCounter(); // compteur d'états visités
 
-			this.incStateCounter(); // compteur d'états visités
+            // Évalue la valeur maximale de l'adversaire
+            ActionValuePair nextActionValuePair = maxVal((GameState) nextState, alpha, beta);
 
-			// Évalue la valeur maximale de l'adversaire
-			ActionValuePair nextActionValuePair = maxVal((GameState) nextState, alpha, beta);
+            if (nextActionValuePair.getValue() <= minValue) {
+                minValue = nextActionValuePair.getValue();
 
-			if (nextActionValuePair.getValue() <= minValue) {
-				minValue = nextActionValuePair.getValue();
+                if (minValue < beta) {
+                    beta = minValue;
+                    bestAction = action;
+                }
+            }
 
-				if (minValue < beta) {
-					beta = minValue;
-					bestAction = action;
-				}
-			}
+            if (minValue <= alpha) {
+                return new ActionValuePair(bestAction, minValue);
+            }
+        }
 
-			if (minValue <= alpha) {
-				return new ActionValuePair(bestAction, minValue);
-			}
-		}
+        return new ActionValuePair(bestAction, minValue);
+    }
 
-		return new ActionValuePair(bestAction, minValue);
-	}
+    /**
+     * Fonction Minimax pour maximiser le score.
+     *
+     * @param state
+     * @param alpha
+     * @param beta
+     * @param depth Profondeur de recherche
+     * @return
+     */
+    public ActionValuePair maxVal(GameState state, double alpha, double beta, int depth) {
+        // Vérifie si l'état est final
+        if (state.isFinalState() || depth == 0) {
+            return new ActionValuePair(null, state.getGameValue());
+        }
 
-	/**
-	 * Fonction Minimax pour maximiser le score.
-	 * @param state
-	 * @param alpha
-	 * @param beta
-	 * @param depth Profondeur de recherche
-	 * @return
-	 */
-	public ActionValuePair maxVal(GameState state, double alpha, double beta, int depth) {
-		// Vérifie si l'état est final
-		if (state.isFinalState() || depth == 0) {
-			return new ActionValuePair(null, state.getGameValue());
-		}
+        double maxValue = Double.NEGATIVE_INFINITY;
+        Action bestAction = null;
 
-		double maxValue = Double.NEGATIVE_INFINITY;
-		Action bestAction = null;
+        // Parcourt toutes les actions possibles
+        for (Action action : game.getActions(state)) {
+            State nextState = game.doAction(state, action);
 
-		// Parcourt toutes les actions possibles
-		for (Action action : game.getActions(state)) {
-			State nextState = game.doAction(state, action);
+            this.incStateCounter(); // compteur d'états visités
 
-			this.incStateCounter(); // compteur d'états visités
+            // Évalue la valeur minimale de l'adversaire
+            ActionValuePair nextActionValuePair = minVal((GameState) nextState, alpha, beta, depth - 1);
 
-			// Évalue la valeur minimale de l'adversaire
-			ActionValuePair nextActionValuePair = minVal((GameState) nextState, alpha, beta, depth - 1);
+            if (nextActionValuePair.getValue() >= maxValue) {
+                maxValue = nextActionValuePair.getValue();
 
-			if (nextActionValuePair.getValue() >= maxValue) {
-				maxValue = nextActionValuePair.getValue();
+                if (maxValue > alpha) {
+                    alpha = maxValue;
+                    bestAction = action;
+                }
+            }
 
-				if (maxValue > alpha) {
-					alpha = maxValue;
-					bestAction = action;
-				}
-			}
+            if (maxValue >= beta) {
+                return new ActionValuePair(bestAction, maxValue);
+            }
+        }
 
-			if (maxValue >= beta) {
-				return new ActionValuePair(bestAction, maxValue);
-			}
-		}
+        return new ActionValuePair(bestAction, maxValue);
+    }
 
-		return new ActionValuePair(bestAction, maxValue);
-	}
+    /**
+     * Fonction Minimax pour minimiser le score.
+     *
+     * @param state
+     * @param alpha
+     * @param beta
+     * @param depth Profondeur de recherche
+     * @return
+     */
+    public ActionValuePair minVal(GameState state, double alpha, double beta, int depth) {
+        // Vérifie si l'état est final
+        if (state.isFinalState() || depth == 0) {
+            return new ActionValuePair(null, state.getGameValue());
+        }
 
-	/**
-	 * Fonction Minimax pour minimiser le score.
-	 * @param state
-	 * @param alpha
-	 * @param beta
-	 * @param depth Profondeur de recherche
-	 * @return
-	 */
-	public ActionValuePair minVal(GameState state, double alpha, double beta, int depth) {
-		// Vérifie si l'état est final
-		if (state.isFinalState() || depth == 0) {
-			return new ActionValuePair(null, state.getGameValue());
-		}
+        double minValue = Double.POSITIVE_INFINITY;
+        Action bestAction = null;
 
-		double minValue = Double.POSITIVE_INFINITY;
-		Action bestAction = null;
+        // Parcourt toutes les actions possibles
+        for (Action action : game.getActions(state)) {
+            State nextState = game.doAction(state, action);
 
-		// Parcourt toutes les actions possibles
-		for (Action action : game.getActions(state)) {
-			State nextState = game.doAction(state, action);
+            this.incStateCounter(); // compteur d'états visités
 
-			this.incStateCounter(); // compteur d'états visités
+            // Évalue la valeur maximale de l'adversaire
+            ActionValuePair nextActionValuePair = maxVal((GameState) nextState, alpha, beta, depth - 1);
 
-			// Évalue la valeur maximale de l'adversaire
-			ActionValuePair nextActionValuePair = maxVal((GameState) nextState, alpha, beta, depth - 1);
+            if (nextActionValuePair.getValue() <= minValue) {
+                minValue = nextActionValuePair.getValue();
 
-			if (nextActionValuePair.getValue() <= minValue) {
-				minValue = nextActionValuePair.getValue();
+                if (minValue < beta) {
+                    beta = minValue;
+                    bestAction = action;
+                }
+            }
 
-				if (minValue < beta) {
-					beta = minValue;
-					bestAction = action;
-				}
-			}
+            if (minValue <= alpha) {
+                return new ActionValuePair(bestAction, minValue);
+            }
+        }
 
-			if (minValue <= alpha) {
-				return new ActionValuePair(bestAction, minValue);
-			}
-		}
-
-		return new ActionValuePair(bestAction, minValue);
-	}
+        return new ActionValuePair(bestAction, minValue);
+    }
 }
