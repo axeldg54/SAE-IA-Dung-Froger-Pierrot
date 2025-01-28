@@ -8,13 +8,21 @@ import ia.framework.jeux.GameState;
 import ia.framework.jeux.Player;
 
 public class AlphaBetaPlayer extends Player {
-	
+
+	private int depth;
+
 	/**
 	 * Représente un joueur utilisant l'algorithme Minimax.
 	 *
 	 * @param g          l'instance du jeu
 	 * @param player_one indique si c'est le joueur 1
 	 */
+	public AlphaBetaPlayer(Game g, boolean player_one, int depth) {
+		super(g, player_one);
+		name = "MinMaxAlphaBeta";
+		this.depth = depth;
+	}
+
 	public AlphaBetaPlayer(Game g, boolean player_one) {
 		super(g, player_one);
 		name = "MinMaxAlphaBeta";
@@ -25,11 +33,17 @@ public class AlphaBetaPlayer extends Player {
 		ActionValuePair bestMove;
 
 		if (player == PLAYER1) {
-			bestMove = maxVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-			//bestMove = maxVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 2);
+			if (this.depth > 0) {
+				bestMove = maxVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, this.depth);
+			} else {
+				bestMove = maxVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+			}
 		} else {
-			bestMove = minVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-			//bestMove = minVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 2);
+			if (this.depth > 0) {
+				bestMove = minVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, this.depth);
+			} else {
+				bestMove = minVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+			}
 		}
 		
 		return bestMove.getAction();
