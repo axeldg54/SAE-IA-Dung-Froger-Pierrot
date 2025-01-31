@@ -63,22 +63,21 @@ public class MinMaxPlayer extends Player {
             this.incStateCounter(); // compteur d'états visités
             GameState nextState = (GameState) game.doAction(state, action);
 
-            // Évalue la valeur minimale de l'adversaire
+            // Évalue la valeur maximale de l'adversaire
+            ActionValuePair nextActionValuePair;
+
             if (this.depth > 0) {
-                ActionValuePair nextActionValuePair = minVal(nextState, depth--);
-
-                if (nextActionValuePair.getValue() >= maxValue) {
-                    maxValue = nextActionValuePair.getValue();
-                    bestAction = action;
-                }
+                nextActionValuePair = minVal(nextState, depth--);
             } else {
-                System.out.println("Profondeur max dépassée !");
-//                System.out.println("evaluationFonction : " + nextState.evaluationFunction());
+                nextActionValuePair = new ActionValuePair(action, nextState.evaluationFunction());
 
-                if (nextState.evaluationFunction() > maxValue) {
-                    maxValue = nextState.evaluationFunction();
-                    bestAction = action;
-                }
+                System.out.println("Profondeur max dépassée !");
+//                System.out.println("evaluationFonction : " + nextActionValuePair.getValue());
+            }
+
+            if (nextActionValuePair.getValue() >= maxValue) {
+                maxValue = nextActionValuePair.getValue();
+                bestAction = action;
             }
         }
         return new ActionValuePair(bestAction, maxValue);
@@ -111,21 +110,20 @@ public class MinMaxPlayer extends Player {
             GameState nextState = (GameState) game.doAction(state, action);
 
             // Évalue la valeur maximale de l'adversaire
+            ActionValuePair nextActionValuePair;
+
             if (this.depth > 0) {
-                ActionValuePair nextActionValuePair = maxVal(nextState, depth--);
-
-                if (nextActionValuePair.getValue() <= minValue) {
-                    minValue = nextActionValuePair.getValue();
-                    bestAction = action;
-                }
+                nextActionValuePair = maxVal(nextState, depth--);
             } else {
-                System.out.println("Profondeur max dépassée !");
-//                System.out.println("evaluationFonction : " + nextState.evaluationFunction());
+                nextActionValuePair = new ActionValuePair(action, nextState.evaluationFunction());
 
-                if (nextState.evaluationFunction() < minValue) {
-                    minValue = nextState.evaluationFunction();
-                    bestAction = action;
-                }
+                System.out.println("Profondeur max dépassée !");
+//                System.out.println("evaluationFonction : " + nextActionValuePair.getValue());
+            }
+
+            if (nextActionValuePair.getValue() <= minValue) {
+                minValue = nextActionValuePair.getValue();
+                bestAction = action;
             }
         }
         return new ActionValuePair(bestAction, minValue);
