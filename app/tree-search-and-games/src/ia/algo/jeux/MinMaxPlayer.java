@@ -2,7 +2,6 @@ package ia.algo.jeux;
 
 import ia.framework.common.Action;
 import ia.framework.common.ActionValuePair;
-import ia.framework.common.State;
 import ia.framework.jeux.Game;
 import ia.framework.jeux.GameState;
 import ia.framework.jeux.Player;
@@ -62,11 +61,11 @@ public class MinMaxPlayer extends Player {
         // Parcourt toutes les actions possibles
         for (Action action : game.getActions(state)) {
             this.incStateCounter(); // compteur d'états visités
-            State nextState = game.doAction(state, action);
+            GameState nextState = (GameState) game.doAction(state, action);
 
             // Évalue la valeur minimale de l'adversaire
             if (this.depth > 0) {
-                ActionValuePair nextActionValuePair = minVal((GameState) nextState, depth--);
+                ActionValuePair nextActionValuePair = minVal(nextState, depth--);
 
                 if (nextActionValuePair.getValue() >= maxValue) {
                     maxValue = nextActionValuePair.getValue();
@@ -74,8 +73,12 @@ public class MinMaxPlayer extends Player {
                 }
             } else {
                 System.out.println("Profondeur max dépassée !");
-                maxValue = state.getGameValue();
-                bestAction = game.getActions(state).get((int) Math.floor(Math.random() * game.getActions(state).size()));
+//                System.out.println("evaluationFonction : " + nextState.evaluationFunction());
+
+                if (nextState.evaluationFunction() > maxValue) {
+                    maxValue = nextState.evaluationFunction();
+                    bestAction = action;
+                }
             }
         }
         return new ActionValuePair(bestAction, maxValue);
@@ -105,11 +108,11 @@ public class MinMaxPlayer extends Player {
         // Parcourt toutes les actions possibles
         for (Action action : game.getActions(state)) {
             this.incStateCounter(); // compteur d'états visités
-            State nextState = game.doAction(state, action);
+            GameState nextState = (GameState) game.doAction(state, action);
 
             // Évalue la valeur maximale de l'adversaire
             if (this.depth > 0) {
-                ActionValuePair nextActionValuePair = maxVal((GameState) nextState, depth--);
+                ActionValuePair nextActionValuePair = maxVal(nextState, depth--);
 
                 if (nextActionValuePair.getValue() <= minValue) {
                     minValue = nextActionValuePair.getValue();
@@ -117,8 +120,12 @@ public class MinMaxPlayer extends Player {
                 }
             } else {
                 System.out.println("Profondeur max dépassée !");
-                minValue = state.getGameValue();
-                bestAction = game.getActions(state).get((int) Math.floor(Math.random() * game.getActions(state).size()));
+//                System.out.println("evaluationFonction : " + nextState.evaluationFunction());
+
+                if (nextState.evaluationFunction() < minValue) {
+                    minValue = nextState.evaluationFunction();
+                    bestAction = action;
+                }
             }
         }
         return new ActionValuePair(bestAction, minValue);

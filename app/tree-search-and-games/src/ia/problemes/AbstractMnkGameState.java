@@ -247,7 +247,7 @@ public abstract class AbstractMnkGameState extends GameState {
      *
      * @return la valeur du jeux
      **/
-    protected abstract double evaluationFunction();
+    public abstract double evaluationFunction();
 
     /**
      * {@inheritDoc}
