@@ -1,7 +1,7 @@
 package ia.problemes;
 
 /**
- * Représente un état du jeux du morpion
+ * Représente un état du jeu du morpion
  */
 
 public class TicTacToeState extends MnkGameState {
@@ -30,18 +30,17 @@ public class TicTacToeState extends MnkGameState {
      * La valeur = le nombre de lignes possibles pour X moins
      * le nombre de lignes possibles pour O</p>
      *
-     * </p>Une valeur nulle indique que le jeux est équilibré, une valeur positif
+     * </p>Une valeur nulle indique que le jeu est équilibré, une valeur positive
      * indique une situation favorable pour X et inversement pour une valeur
      * négative.</p>
      *
      * @return la valeur du jeu
      **/
-    protected double evaluationFunction() {
+    public double evaluationFunction() {
         int pos_x = this.possibleLines(X);
         int pos_o = this.possibleLines(O);
 
-        //         System.out.println("Possibilities: X = "+pos_x+", O = "+pos_o+
-//        ". Value = "+value);
+//        System.out.println("Possibilities: X = " + pos_x + ", O = " + pos_o + ". Value = " + "value"/*value*/);
         return pos_x - pos_o;
     }
 
@@ -60,7 +59,7 @@ public class TicTacToeState extends MnkGameState {
     // compte le nombre de lignes verticales possibles pour player 
     private int possibleVerticalLines(int player) {
 
-        // une ligne possible pour player est un ligne : 
+        // une ligne possible pour player est une ligne :
         // * vide
         // * avec une seule pièce de player
         // * avec deux pièces de player

@@ -1,15 +1,7 @@
 package ia.problemes;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-
-import ia.framework.common.Action;
-import ia.framework.common.State;
-import ia.framework.common.ArgParse;
-
 /**
- * Représente un état du jeux Gomoku 
- *
+ * Représente un état du jeu Gomoku
  */
 
 public class GomokuState extends AbstractMnkGameState {
@@ -23,21 +15,20 @@ public class GomokuState extends AbstractMnkGameState {
         new_s.board = this.board.clone();
         new_s.player_to_move = this.player_to_move;
         new_s.game_value = this.game_value;
-        if( this.last_action != null)
+        if (this.last_action != null)
             new_s.last_action = this.last_action.clone();
-        for (Pair p: this.winning_move)
+        for (Pair p : this.winning_move)
             new_s.winning_move.add(p.clone());
-        
+
         return new_s;
     }
-    
+
     /**
-     * {@inheritDoc} 
-     * 
-     * @return la valeur du jeu 
+     * {@inheritDoc}
+     *
+     * @return la valeur du jeu
      **/
-    protected double evaluationFunction(){
+    public double evaluationFunction() {
         return Double.NaN;
     }
-    
 }
