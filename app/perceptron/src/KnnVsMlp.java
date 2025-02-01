@@ -79,35 +79,50 @@ public class KnnVsMlp {
     }
 
     private static void generateData(Donnees donneesEntrainement, int nbImages, int nbIterations, Donnees donneesTest) throws IOException {
-        BufferedWriter file = new BufferedWriter(new FileWriter("./app/perceptron/data/mlp3.csv"));
+        BufferedWriter file = new BufferedWriter(new FileWriter("./app/perceptron/data/mlp_10000EntrainementEtTest_100iterations.csv"));
         file.write("nbNeuronesCaches1;nbNeuronesCaches2;taux;resultat en %");
         file.newLine();
-
-        double[] l = {0.01, 0.05, 0.1, 0.3, 0.5};
-
-        //for (int i = 10; i <= 10000; i += 100) { // parcours de différents nombres d'images
-        //for (int i = 0; i <= 1; i++) { // Données mélangées ou non
-        for (int j = 25; j <= 101; j += 25) { // parcours de différents nombres de neurones cachés (première couche cachée)
-            for (int k = 0; k <= 100; k += 25) { // parcours de différents nombres de neurones cachés (seconde couche cachée)
-                for (double lCourant : l) { // parcours de différents taux d'apprentissage
-                    MLP mlp2 = new MLP(new int[]{784, j, k, 10}, lCourant, new Sigmoide());
-                    //if (i == 1) {
-                    //donneesEntrainement = donneesEntrainement.getRandom();
-                    //}
-                    trainWithImages(donneesEntrainement, mlp2, nbImages, nbIterations);
-                    double res2 = testWithImages(donneesTest, mlp2, nbImages);
-                    file.write("""
-                            %d;%d;%f;%f
-                            """.formatted(j, k, lCourant, res2));
-                    System.out.println("l = " + l);
-                }
-                System.out.println("k = " + k);
-            }
-            System.out.println("j = " + j);
-        }
-        //}
-        //}
-        file.close();
+	    
+	    double[] l = {0.01, 0.05, 0.1, 0.3, 0.5};
+	    TransferFunction[] func = {new Sigmoide(), new Tanh()};
+	    
+	    // plus de 24h d'exécution pour ces boucles imbriquées
+	    for (int j = 25; j <= 100; j += 25) { // parcours de différents nombres de neurones cachés (première couche cachée)
+		    for (int k = 0; k <= 100; k += 25) { // parcours de différents nombres de neurones cachés (seconde couche cachée)
+			    for (double lCourant : l) { // parcours de différents taux d'apprentissage
+				    for (TransferFunction functionCourante : func) {
+					    
+					    MLP mlp2 = new MLP(new int[]{784, j, k, 10}, lCourant, functionCourante);
+					    
+					    if (k == 0) { // dans le cas où la deuxième couche cachée de neurones est vide : on ne l'écrit tout simplement pas
+						    mlp2 = new MLP(new int[]{784, j, 10}, lCourant, functionCourante);
+					    }
+					    
+					    // on mélange les données
+					    donneesEntrainement = donneesEntrainement.shuffle();
+					    donneesTest = donneesTest.shuffle();
+					    
+					    // entrainement du réseau de neurones
+					    trainWithImages(donneesEntrainement, mlp2, nbImages, nbIterations);
+					    
+					    // test du réseau de neurones
+					    double resmlp2 = testWithImages(donneesTest, mlp2, nbImages);
+					    
+					    // on écrit les résultats obtenus dans le fichier de sauvegarde
+					    file.write("""
+								%s;%d;%d;%f;%f
+								""".formatted(functionCourante.toString(), j, k, lCourant, resmlp2));
+					    
+					    System.out.println("l = " + functionCourante);
+				    }
+				    System.out.println("l = " + lCourant);
+			    }
+			    System.out.println("k = " + k);
+		    }
+		    System.out.println("j = " + j);
+	    }
+	    
+	    file.close();
     }
 
     /**

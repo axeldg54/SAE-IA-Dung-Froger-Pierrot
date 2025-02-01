@@ -32,7 +32,7 @@ public class MinMaxPlayer extends Player {
         if (player == PLAYER1) bestMove = maxVal(state, maxDepth);
         else bestMove = minVal(state, maxDepth);
 
-        System.out.println("Profondeur maximale atteinte : " + this.depth);
+//        System.out.println("Profondeur maximale atteinte : " + this.depth);
 
         return bestMove.getAction();
     }
@@ -71,7 +71,7 @@ public class MinMaxPlayer extends Player {
             } else {
                 nextActionValuePair = new ActionValuePair(action, nextState.evaluationFunction());
 
-                System.out.println("Profondeur max dépassée !");
+//                System.out.println("Profondeur max dépassée !");
 //                System.out.println("evaluationFonction : " + nextActionValuePair.getValue());
             }
 
@@ -117,7 +117,7 @@ public class MinMaxPlayer extends Player {
             } else {
                 nextActionValuePair = new ActionValuePair(action, nextState.evaluationFunction());
 
-                System.out.println("Profondeur max dépassée !");
+//                System.out.println("Profondeur max dépassée !");
 //                System.out.println("evaluationFonction : " + nextActionValuePair.getValue());
             }
 

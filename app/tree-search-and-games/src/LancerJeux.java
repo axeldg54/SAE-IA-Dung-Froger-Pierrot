@@ -44,7 +44,7 @@ public class LancerJeux {
         Player p1 = ArgParse.makePlayer(p1_type, game, true, args);
         Player p2 = ArgParse.makePlayer(p2_type, game, false, args);
         GameEngine game_engine = new GameEngine(game, p1, p2);
-
+        
         // on joue jusqu'à la fin
         long startTime = System.currentTimeMillis();
         GameState end_game = game_engine.gameLoop();

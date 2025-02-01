@@ -32,7 +32,7 @@ public class AlphaBetaPlayer extends Player {
         if (player == PLAYER1) bestMove = maxVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, maxDepth);
         else bestMove = minVal(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, maxDepth);
 
-        System.out.println("Profondeur maximale atteinte : " + this.depth);
+//        System.out.println("Profondeur maximale atteinte : " + this.depth);
 
         return bestMove.getAction();
     }
@@ -69,7 +69,7 @@ public class AlphaBetaPlayer extends Player {
             } else {
                 nextActionValuePair = new ActionValuePair(action, nextState.evaluationFunction());
 
-                System.out.println("Profondeur max dépassée !");
+//                System.out.println("Profondeur max dépassée !");
             }
 
             if (nextActionValuePair.getValue() >= maxValue) {
@@ -121,7 +121,7 @@ public class AlphaBetaPlayer extends Player {
             } else {
                 nextActionValuePair = new ActionValuePair(action, nextState.evaluationFunction());
 
-                System.out.println("Profondeur max dépassée !");
+//                System.out.println("Profondeur max dépassée !");
             }
 
             if (nextActionValuePair.getValue() <= minValue) {
